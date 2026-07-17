@@ -10,24 +10,24 @@ const API_URL = 'http://localhost:3000/api';
 
 function App() {
   const monaco = useMonaco();
-  
+
   const [lang, setLang] = useState('en');
   const t = locales[lang].app;
 
-  const [tabs, setTabs] = useState([{ 
-    id: '1', 
-    name: 'main.mpl', 
-    content: 'num1 = 5;\nnum2 = 10;\nresult = num1 * num2;\ndisplay(result);\n' 
+  const [tabs, setTabs] = useState([{
+    id: '1',
+    name: 'main.mpl',
+    content: 'num1 = 5;\nnum2 = 10;\nresult = num1 * num2;\ndisplay(result);\n'
   }]);
   const [activeTabId, setActiveTabId] = useState('1');
   const [leftPane, setLeftPane] = useState('editor');
   const [rightPane, setRightPane] = useState('output');
-  
+
   const [output, setOutput] = useState('');
   const [error, setError] = useState('');
   const [isRunning, setIsRunning] = useState(false);
   const [samples, setSamples] = useState([]);
-  
+
   const [dynamicVars, setDynamicVars] = useState(new Set());
   const providerRef = useRef(null);
 
@@ -42,7 +42,7 @@ function App() {
       monaco.languages.setLanguageConfiguration('mpl', mplLanguageConfig);
     }
   }, [monaco]);
-  
+
   useEffect(() => {
     if (monaco) {
       if (providerRef.current) {
@@ -90,13 +90,13 @@ function App() {
       while ((match = regex.exec(activeTab.content)) !== null) {
         vars.add(match[1]);
       }
-      
+
       let changed = false;
       if (vars.size !== dynamicVars.size) changed = true;
       else {
         for (let v of vars) if (!dynamicVars.has(v)) changed = true;
       }
-      
+
       if (changed) setDynamicVars(vars);
     }
   }, [activeTab?.content]);
@@ -170,7 +170,7 @@ function App() {
         fileName = newName.endsWith('.mpl') ? newName : `${newName}.mpl`;
         setTabs(tabs.map(tab => tab.id === activeTabId ? { ...tab, name: fileName } : tab));
       } else {
-        return; 
+        return;
       }
     }
     const blob = new Blob([activeTab.content], { type: 'text/plain' });
@@ -195,14 +195,14 @@ function App() {
         body: JSON.stringify({ code: activeTab.content })
       });
       const data = await res.json();
-      
+
       if (data.error) setError(data.error);
-      
+
       let out = "";
       if (data.stdout) out += data.stdout;
       if (data.stderr) out += `\n[STDERR]:\n${data.stderr}`;
       setOutput(out);
-      
+
     } catch (e) {
       setError(t.backendError);
     } finally {
@@ -244,14 +244,14 @@ function App() {
               <BookOpen size={16} /> {t.documentation}
             </button>
           </div>
-          
+
           <div className="pane-content">
             {leftPane === 'editor' && (
               <div className="editor-wrapper">
                 <div className="editor-file-tabs">
                   {tabs.map(tab => (
-                    <div 
-                      key={tab.id} 
+                    <div
+                      key={tab.id}
                       className={`file-tab ${activeTabId === tab.id ? 'active' : ''}`}
                       onClick={() => setActiveTabId(tab.id)}
                     >
@@ -285,7 +285,7 @@ function App() {
                 </div>
               </div>
             )}
-            
+
             {leftPane === 'docs' && <Documentation lang={lang} />}
           </div>
         </div>
@@ -311,7 +311,7 @@ function App() {
                 )}
               </div>
             )}
-            
+
             {rightPane === 'live' && <Terminal lang={lang} />}
           </div>
         </div>

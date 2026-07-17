@@ -64,9 +64,9 @@ const Terminal = ({ lang }) => {
             </div>
             <div className="terminal-input-row">
                 <span className="prompt">&gt;</span>
-                <input 
-                    type="text" 
-                    value={input} 
+                <input
+                    type="text"
+                    value={input}
                     onChange={e => setInput(e.target.value)}
                     onKeyDown={handleKeyDown}
                     placeholder={t.placeholder}

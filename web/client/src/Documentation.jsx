@@ -3,12 +3,12 @@ import { locales } from './locales';
 
 const Documentation = ({ lang }) => {
     const t = locales[lang].docs;
-    
+
     return (
         <div className="documentation">
             <h2>{t.title}</h2>
             <p>{t.intro}</p>
-            
+
             <section>
                 <h3>{t.varType}</h3>
                 <p>{t.varDesc}</p>
@@ -24,7 +24,7 @@ const Documentation = ({ lang }) => {
                     </code>
                 </div>
             </section>
-            
+
             <section>
                 <h3>{t.basicOps}</h3>
                 <p>{t.basicOpsDesc}</p>
@@ -36,11 +36,11 @@ const Documentation = ({ lang }) => {
                     </code>
                 </div>
             </section>
-            
+
             <section>
                 <h3>{t.advancedMath}</h3>
                 <p>{t.advancedMathDesc}</p>
-                
+
                 <details className="doc-dropdown">
                     <summary><strong>TRIDIAGONAL(mat)</strong></summary>
                     <div className="dropdown-content">
@@ -97,7 +97,7 @@ const Documentation = ({ lang }) => {
                         </div>
                     </div>
                 </details>
-                
+
                 <details className="doc-dropdown">
                     <summary><strong>INTEGRAL(expr, a, b)</strong></summary>
                     <div className="dropdown-content">
@@ -111,7 +111,7 @@ const Documentation = ({ lang }) => {
                         </div>
                     </div>
                 </details>
-                
+
             </section>
         </div>
     );

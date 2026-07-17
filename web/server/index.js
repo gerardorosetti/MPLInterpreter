@@ -70,7 +70,7 @@ app.get('/api/samples/:filename', (req, res) => {
     if (!filePath.startsWith(SAMPLES_DIR)) {
         return res.status(403).json({ error: "Forbidden" });
     }
-    
+
     fs.readFile(filePath, 'utf-8', (err, data) => {
         if (err) {
             return res.status(404).json({ error: "File not found" });
