@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  # Servicio original (CLI) - Se mantiene intacto
+  mpl-interpreter:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: mpl-interpreter
+    volumes:
+      - .:/app
+    stdin_open: true
+    tty: true
+    command: bash -c "make && make run"
+
+  # Nuevo servicio para el entorno Web
+  web-ide:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    container_name: mpl-web-ide
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"   # Puerto del Backend Node
+      - "5173:5173"   # Puerto del Frontend React (Vite)
+    stdin_open: true
+    tty: true
+    command: bash -c "make && cd /app/web/server && npm install && cd /app/web/client && npm install && (npm run dev &) && cd /app/web/server && npm run dev"

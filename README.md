@@ -58,9 +58,40 @@ The Mathematical Programming Language was designed to solve fundamental mathemat
    ```bash
       ./build/mpl samples/"name of the file".mpl
    ```
+## Web IDE (MPL ULA)
+
+We have built a fully functional interactive Web IDE with syntax highlighting, live REPL via WebSockets, and documentation to run the language directly from your browser.
+
+### Running with Docker (Recommended)
+If you have Docker and Docker Compose installed, running the IDE is incredibly simple. It will automatically build the C++ environment and start both the backend and frontend servers:
+
+```bash
+docker-compose up web-ide
+```
+Once you see `VITE ready`, navigate to `http://localhost:5173` in your browser.
+
+### Running Manually (Without Docker)
+If you prefer not to use Docker, ensure you have **Node.js (v18+)** installed along with the C++ prerequisites mentioned above.
+
+1. Compile the project first: `make`
+2. Open two terminal windows.
+3. In the first terminal, start the Backend API:
+   ```bash
+   cd web/server
+   npm install
+   npm run dev
+   ```
+4. In the second terminal, start the Frontend:
+   ```bash
+   cd web/client
+   npm install
+   npm run dev
+   ```
+5. Navigate to the local URL provided by Vite (usually `http://localhost:5173`).
+
 ## Note
-   In the samples folder you can found examples usages for the lenguage. So you can make your own scripts of our lenguage and test then!. 
-   Currently the main.cpp archive obtains the AST from the parser and evaluates it with the eval method and show the result with the toString method. 
+   In the samples folder you can found examples usages for the lenguage. So you can make your own scripts of our lenguage and test then!.
+   Currently the main.cpp archive obtains the AST from the parser and evaluates it with the eval method and show the result with the toString method.
 
 ## Acknowledgements
 For more information about the development and specifications of the Mathematical Programming Language, you can refer to
