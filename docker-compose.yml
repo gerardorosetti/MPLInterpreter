@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  # CLI Interpreter: Runs the interpreter's C++/Make core environment in interactive mode
+  mpl-interpreter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mpl-interpreter
+    volumes:
+      - .:/app
+    stdin_open: true
+    tty: true
+    command: bash -c "make && make run"
+
+  # Web IDE: Spins up the browser-based editor, compiling the code and running development servers
+  web-ide:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    container_name: mpl-web-ide
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"   # Node.js backend server API port
+      - "5173:5173"   # React client (Vite dev server) port
+    stdin_open: true
+    tty: true
+    command: bash -c "make && cd /app/web/server && npm install && cd /app/web/client && npm install && (npm run dev &) && cd /app/web/server && npm run dev"

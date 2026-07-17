@@ -1,2 +1,9 @@
 /build
 .vscode/
+
+# Web IDE Dependencies & Build files
+node_modules/
+web/client/node_modules/
+web/server/node_modules/
+web/client/dist/
+.env

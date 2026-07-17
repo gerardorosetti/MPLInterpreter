@@ -1,0 +1,23 @@
+FROM debian:bookworm-slim
+
+# Install dependencies required for MPL interpreter and Node.js for the Web UI
+RUN apt-get update && apt-get install -y \
+    curl \
+    flex \
+    bison \
+    make \
+    g++ \
+    libreadline-dev \
+    valgrind \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Expose ports for backend and frontend (Vite)
+EXPOSE 3000
+EXPOSE 5173
+
+# By default we can just drop into bash, docker-compose will override the command
+CMD ["/bin/bash"]
