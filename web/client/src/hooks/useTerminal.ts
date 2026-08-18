@@ -61,7 +61,7 @@ export const useTerminal = () => {
     socketService.onClosed(handleClosed);
 
     return () => {
-      socketService.off(SocketEvent.CONNECTION);
+      socketService.off(SocketEvent.CLIENT_CONNECT);
       socketService.off(SocketEvent.DISCONNECT);
       socketService.off(SocketEvent.OUTPUT);
       socketService.off(SocketEvent.ERROR_OUTPUT);

@@ -5,7 +5,7 @@ import { ChildProcess } from 'child_process';
 import { SocketEvent } from '@/constants/socketEvents';
 
 export const setupSockets = (io: Server) => {
-  io.on(SocketEvent.CONNECTION, (socket: Socket) => {
+  io.on(SocketEvent.SERVER_CONNECTION, (socket: Socket) => {
     let mplProcess: ChildProcess | null = ExecutionService.spawnRepl() as ChildProcess;
 
     if (mplProcess && mplProcess.stdout) {

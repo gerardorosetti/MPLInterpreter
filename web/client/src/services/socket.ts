@@ -51,7 +51,7 @@ export class SocketService {
   }
 
   onConnect(callback: () => void): void {
-    this.socket?.on(SocketEvent.CONNECTION, callback);
+    this.socket?.on(SocketEvent.CLIENT_CONNECT, callback);
   }
 
   onDisconnect(callback: () => void): void {
