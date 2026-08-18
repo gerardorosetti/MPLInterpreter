@@ -1,0 +1,44 @@
+{
+    "app": {
+        "title": "MPL ULA",
+        "loadSample": "-- Cargar Ejemplo --",
+        "runCode": "Ejecutar Código",
+        "download": "Descargar",
+        "editor": "Editor",
+        "documentation": "Documentación",
+        "output": "Salida",
+        "liveRepl": "Terminal en Vivo",
+        "outputPlaceholder": "La salida aparecerá aquí...",
+        "backendError": "Fallo al conectar con el motor MPL. ¿Está corriendo el backend?"
+    },
+    "docs": {
+        "title": "📖 MPL ULA - Guía de Referencia",
+        "intro": "Bienvenido al entorno interactivo. El lenguaje MPL está diseñado estrictamente para operaciones matemáticas y numéricas. (Nota: ¡No existen los strings/textos!).",
+        "varType": "1. Variables y Tipos Básicos",
+        "varDesc": "Todo en MPL gira en torno a números, vectores y matrices.",
+        "scalar": "Número Escalar",
+        "vector": "Vector (Componentes separados por comas)",
+        "matrix": "Matriz (Vectores unidos por llaves o declarada explícitamente)",
+        "basicOps": "2. Operaciones Básicas y Trigonometría",
+        "basicOpsDesc": "Puedes usar los operadores estándar +, -, *, /, ^ y las funciones trigonométricas integradas.",
+        "advancedMath": "3. Métodos Numéricos y Matemáticas Avanzadas",
+        "advancedMathDesc": "Haz clic en cada método para ver su funcionamiento y trasfondo matemático.",
+        "tridiagonal": "TRIDIAGONAL(mat) - Transformación de Matriz",
+        "tridiagonalDesc": "Trasfondo: Utiliza reflexiones de Householder para reducir una matriz simétrica a una forma tridiagonal. Es un paso intermedio crucial para calcular valores propios de forma eficiente.",
+        "matrixLu": "MATRIXLU(mat) - Factorización LU",
+        "matrixLuDesc": "Trasfondo: Descompone una matriz cuadrada A en el producto de una matriz triangular inferior (L) y una triangular superior (U). Útil para resolver sistemas de ecuaciones lineales de la forma Ax = b.",
+        "realEigen": "REALEIGENVALUES(mat) - Valores Propios",
+        "realEigenDesc": "Trasfondo: Calcula los valores propios reales de una matriz, típicamente utilizando el algoritmo QR. Los valores propios son escalares λ tales que Ax = λx.",
+        "bisection": "BISECTIONROOT(expr, a, b) - Búsqueda de Raíces",
+        "bisectionDesc": "Trasfondo: El método de la bisección encuentra una raíz de una ecuación matemática f(x) = 0 dividiendo el intervalo [a, b] por la mitad de forma iterativa, garantizando convergencia si f(a) y f(b) tienen signos opuestos.",
+        "bisectionExample": "Encontrar la raíz de (letter)^2 - 4 en el intervalo [0, 5]",
+        "integral": "INTEGRAL(expr, a, b) - Integración Numérica",
+        "integralDesc": "Trasfondo: Calcula la integral definida de una función en el intervalo [a, b] utilizando métodos numéricos (como la Regla de Simpson o Trapezoidal) para aproximar el área bajo la curva.",
+        "integralExample": "Integrar (letter)^2 desde 0 hasta 10"
+    },
+    "terminal": {
+        "connected": "Conectado al Intérprete MPL en Vivo.",
+        "disconnected": "Desconectado del servidor.",
+        "placeholder": "Escribe código MPL y presiona Enter..."
+    }
+}

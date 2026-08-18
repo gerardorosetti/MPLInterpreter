@@ -1,0 +1,44 @@
+{
+    "app": {
+        "title": "MPL ULA",
+        "loadSample": "-- Load a Sample --",
+        "runCode": "Run Code",
+        "download": "Download",
+        "editor": "Editor",
+        "documentation": "Documentation",
+        "output": "Output",
+        "liveRepl": "Live REPL",
+        "outputPlaceholder": "Output will appear here...",
+        "backendError": "Failed to connect to the MPL engine. Is the backend running?"
+    },
+    "docs": {
+        "title": "📖 MPL ULA - Reference Guide",
+        "intro": "Welcome to the interactive environment. The MPL language is strictly designed for mathematical and numerical operations. (Note: Strings/text do not exist!).",
+        "varType": "1. Variables and Basic Types",
+        "varDesc": "Everything in MPL revolves around numbers, vectors, and matrices.",
+        "scalar": "Scalar Number",
+        "vector": "Vector (Components separated by commas)",
+        "matrix": "Matrix (Vectors joined by braces or declared explicitly)",
+        "basicOps": "2. Basic Operations and Trigonometry",
+        "basicOpsDesc": "You can use standard operators +, -, *, /, ^ and built-in trigonometric functions.",
+        "advancedMath": "3. Numerical Methods and Advanced Math",
+        "advancedMathDesc": "Click on each method to see its operation and mathematical background.",
+        "tridiagonal": "TRIDIAGONAL(mat) - Matrix Transformation",
+        "tridiagonalDesc": "Background: Uses Householder reflections to reduce a symmetric matrix to a tridiagonal form. It is a crucial intermediate step for computing eigenvalues efficiently.",
+        "matrixLu": "MATRIXLU(mat) - LU Factorization",
+        "matrixLuDesc": "Background: Decomposes a square matrix A into the product of a lower triangular matrix (L) and an upper triangular matrix (U). Useful for solving linear systems of equations Ax = b.",
+        "realEigen": "REALEIGENVALUES(mat) - Eigenvalues",
+        "realEigenDesc": "Background: Computes the real eigenvalues of a matrix, typically using the QR algorithm. Eigenvalues are scalars λ such that Ax = λx.",
+        "bisection": "BISECTIONROOT(expr, a, b) - Root Finding",
+        "bisectionDesc": "Background: The bisection method finds a root of a mathematical equation f(x) = 0 by repeatedly halving the interval [a, b], guaranteeing convergence if f(a) and f(b) have opposite signs.",
+        "bisectionExample": "Find the root of (letter)^2 - 4 in the interval [0, 5]",
+        "integral": "INTEGRAL(expr, a, b) - Numerical Integration",
+        "integralDesc": "Background: Computes the definite integral of a function over the interval [a, b] using numerical methods (like Simpson's or Trapezoidal rule) to approximate the area under the curve.",
+        "integralExample": "Integrate (letter)^2 from 0 to 10"
+    },
+    "terminal": {
+        "connected": "Connected to MPL Live Interpreter.",
+        "disconnected": "Disconnected from server.",
+        "placeholder": "Type MPL code and press Enter..."
+    }
+}
