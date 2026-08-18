@@ -8,15 +8,35 @@ export const setupSockets = (io: Server) => {
   io.on(SocketEvent.SERVER_CONNECTION, (socket: Socket) => {
     let mplProcess: ChildProcess | null = ExecutionService.spawnRepl() as ChildProcess;
 
+    let stdoutBuffer = '';
+    let stdoutTimeout: NodeJS.Timeout | null = null;
+    const flushStdout = () => {
+      if (!stdoutBuffer) return;
+      socket.emit(SocketEvent.OUTPUT, ExecutionService.formatOutput(stdoutBuffer));
+      stdoutBuffer = '';
+    };
+
     if (mplProcess && mplProcess.stdout) {
       mplProcess.stdout.on('data', (data) => {
-        socket.emit(SocketEvent.OUTPUT, ExecutionService.formatOutput(data.toString()));
+        stdoutBuffer += data.toString();
+        if (stdoutTimeout) clearTimeout(stdoutTimeout);
+        stdoutTimeout = setTimeout(flushStdout, 50);
       });
     }
 
+    let stderrBuffer = '';
+    let stderrTimeout: NodeJS.Timeout | null = null;
+    const flushStderr = () => {
+      if (!stderrBuffer) return;
+      socket.emit(SocketEvent.ERROR_OUTPUT, ExecutionService.formatOutput(stderrBuffer));
+      stderrBuffer = '';
+    };
+
     if (mplProcess && mplProcess.stderr) {
       mplProcess.stderr.on('data', (data) => {
-        socket.emit(SocketEvent.ERROR_OUTPUT, ExecutionService.formatOutput(data.toString()));
+        stderrBuffer += data.toString();
+        if (stderrTimeout) clearTimeout(stderrTimeout);
+        stderrTimeout = setTimeout(flushStderr, 50);
       });
     }
 

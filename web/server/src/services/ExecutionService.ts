@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 // For now we use the process, later this will be replaced with WASM execution
-const MPL_BIN = path.resolve(__dirname, '../../../../build/mpl');
+const MPL_BIN = process.env.MPL_BIN_PATH || path.resolve(__dirname, '../../../../build/mpl');
 
 export interface ExecutionResult {
   stdout: string;
@@ -62,10 +62,13 @@ export class ExecutionService {
   static executor: IExecutor = new NativeCppExecutor();
 
   static formatOutput(str: string): string {
+    // Strip standard ANSI color codes
     let clean = str.replace(
       /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g,
       '',
     );
+    // Strip leftover literal garbage from unbuffered streams (e.g. [0m without the escape char)
+    clean = clean.replace(/\[\d+m/g, '');
     clean = clean.replace(/Input \[\d+\]:\s*/g, '');
     clean = clean.replace(/\s*(Output\[\d+\]:)\s*/g, '\n$1 ');
     return clean.trim();
