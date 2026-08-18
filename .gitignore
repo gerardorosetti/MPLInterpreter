@@ -6,6 +6,6 @@ node_modules/
 web/client/node_modules/
 web/server/node_modules/
 web/client/dist/
-.envweb/server/dist/
+web/server/dist/
+.env
 *.tsbuildinfo
-

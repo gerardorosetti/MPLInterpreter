@@ -10,40 +10,40 @@ import { ApiService } from '@/services/api';
  * Hook to execute MPL code and manage loading/error states.
  */
 export const useCodeExecution = () => {
-    const [output, setOutput] = useState<string>('');
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [output, setOutput] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    /**
-     * Executes the given MPL code.
-     * @param code - The MPL source code to execute.
-     */
-    const execute = async (code: string) => {
-        setIsLoading(true);
-        setOutput('Executing...\n');
-        try {
-            const result = await ApiService.executeCode(code);
-            let finalOutput = '';
-            if (result.error) finalOutput += `Error: ${result.error}\n`;
-            if (result.stderr) finalOutput += `Stderr: ${result.stderr}\n`;
-            if (result.stdout) finalOutput += result.stdout;
-            setOutput(finalOutput || 'No output.');
-        } catch (error: any) {
-            setOutput(`Failed to execute code: ${error.message || 'Unknown error'}`);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+  /**
+   * Executes the given MPL code.
+   * @param code - The MPL source code to execute.
+   */
+  const execute = async (code: string) => {
+    setIsLoading(true);
+    setOutput('Executing...\n');
+    try {
+      const result = await ApiService.executeCode(code);
+      let finalOutput = '';
+      if (result.error) finalOutput += `Error: ${result.error}\n`;
+      if (result.stderr) finalOutput += `Stderr: ${result.stderr}\n`;
+      if (result.stdout) finalOutput += result.stdout;
+      setOutput(finalOutput || 'No output.');
+    } catch (error: unknown) {
+      setOutput(error instanceof Error ? error.message : String(error));
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    /**
-     * Clears the current output.
-     */
-    const clearOutput = () => setOutput('');
+  /**
+   * Clears the current output.
+   */
+  const clearOutput = () => setOutput('');
 
-    return {
-        output,
-        isLoading,
-        execute,
-        clearOutput,
-        setOutput
-    };
+  return {
+    output,
+    isLoading,
+    execute,
+    clearOutput,
+    setOutput,
+  };
 };
