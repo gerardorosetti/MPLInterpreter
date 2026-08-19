@@ -40,5 +40,40 @@
         "connected": "Conectado al Intérprete MPL en Vivo.",
         "disconnected": "Desconectado del servidor.",
         "placeholder": "Escribe código MPL y presiona Enter..."
+    },
+    "errors": {
+        "missingCredentials": "El correo y la contraseña son requeridos.",
+        "emailTaken": "El correo ya está registrado.",
+        "serverError": "Error interno del servidor.",
+        "invalidCredentials": "Credenciales inválidas.",
+        "invalidToken": "Token faltante o inválido.",
+        "userNotFound": "Usuario no encontrado.",
+        "snippetNotFound": "Fragmento de código no encontrado.",
+        "forbidden": "Acceso denegado.",
+        "missingSnippetData": "El título y contenido son requeridos.",
+        "noCodeProvided": "No se ha proporcionado código."
+    },
+    "auth": {
+        "welcomeBack": "Bienvenido de Nuevo",
+        "email": "Dirección de correo",
+        "password": "Contraseña",
+        "signIn": "Iniciar Sesión",
+        "noAccount": "¿No tienes una cuenta?",
+        "createOne": "Crea una",
+        "createAccount": "Crear una Cuenta",
+        "fullName": "Nombre completo (opcional)",
+        "alreadyHaveAccount": "¿Ya tienes una cuenta?"
+    },
+    "snippets": {
+        "saveToCloud": "Guardar en la Nube",
+        "snippetTitle": "Título del Snippet",
+        "mySnippets": "Mis Snippets en la Nube",
+        "noSnippets": "Aún no has guardado ningún snippet.",
+        "deleteSnippet": "Eliminar Snippet",
+        "confirmDelete": "¿Estás seguro de que quieres eliminar este snippet?"
+    },
+    "common": {
+        "cancel": "Cancelar",
+        "save": "Guardar"
     }
 }

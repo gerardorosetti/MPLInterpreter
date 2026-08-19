@@ -14,6 +14,8 @@ interface AuthContextType {
   logout: () => void;
 }
 
+import { API_ENDPOINTS } from '@/services/api';
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -34,7 +36,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const fetchUserProfile = async (authToken: string) => {
     try {
-      const response = await fetch('/api/auth/me', {
+      const response = await fetch(API_ENDPOINTS.AUTH_ME, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },

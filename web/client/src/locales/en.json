@@ -40,5 +40,40 @@
         "connected": "Connected to MPL Live Interpreter.",
         "disconnected": "Disconnected from server.",
         "placeholder": "Type MPL code and press Enter..."
+    },
+    "errors": {
+        "missingCredentials": "Email and password are required.",
+        "emailTaken": "Email is already registered.",
+        "serverError": "Internal server error.",
+        "invalidCredentials": "Invalid credentials.",
+        "invalidToken": "Missing or invalid token.",
+        "userNotFound": "User not found.",
+        "snippetNotFound": "Snippet not found.",
+        "forbidden": "Forbidden access.",
+        "missingSnippetData": "Title and content are required.",
+        "noCodeProvided": "No code provided."
+    },
+    "auth": {
+        "welcomeBack": "Welcome Back",
+        "email": "Email address",
+        "password": "Password",
+        "signIn": "Sign In",
+        "noAccount": "Don't have an account?",
+        "createOne": "Create one",
+        "createAccount": "Create an Account",
+        "fullName": "Full name (optional)",
+        "alreadyHaveAccount": "Already have an account?"
+    },
+    "snippets": {
+        "saveToCloud": "Save to Cloud",
+        "snippetTitle": "Snippet Title",
+        "mySnippets": "My Cloud Snippets",
+        "noSnippets": "You haven't saved any snippets yet.",
+        "deleteSnippet": "Delete Snippet",
+        "confirmDelete": "Are you sure you want to delete this snippet?"
+    },
+    "common": {
+        "cancel": "Cancel",
+        "save": "Save"
     }
 }

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { FolderOpen, X, FileCode2, Trash2, Loader2, Clock } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { API_ENDPOINTS } from '@/services/api';
 
 interface Snippet {
   id: string;
@@ -21,6 +23,7 @@ export const MySnippetsModal: React.FC<MySnippetsModalProps> = ({ isOpen, onClos
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const { token } = useAuth();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (isOpen && token) {
@@ -32,14 +35,18 @@ export const MySnippetsModal: React.FC<MySnippetsModalProps> = ({ isOpen, onClos
     setIsLoading(true);
     setError('');
     try {
-      const res = await fetch('/api/snippets', {
+      const res = await fetch(API_ENDPOINTS.SNIPPETS, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (!res.ok) throw new Error('Failed to fetch snippets');
       const data = await res.json();
       setSnippets(data.snippets);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : String(err));
+      if (err instanceof Error) {
+        setError(err.message.startsWith('errors.') ? t(err.message) : err.message);
+      } else {
+        setError(String(err));
+      }
     } finally {
       setIsLoading(false);
     }
@@ -47,7 +54,7 @@ export const MySnippetsModal: React.FC<MySnippetsModalProps> = ({ isOpen, onClos
 
   const loadSnippet = async (id: string, title: string) => {
     try {
-      const res = await fetch(`/api/snippets/${id}`, {
+      const res = await fetch(`${API_ENDPOINTS.SNIPPETS}/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (!res.ok) throw new Error('Failed to load snippet');
@@ -55,23 +62,31 @@ export const MySnippetsModal: React.FC<MySnippetsModalProps> = ({ isOpen, onClos
       onLoadSnippet(title, data.snippet.content);
       onClose();
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : String(err));
+      if (err instanceof Error) {
+        setError(err.message.startsWith('errors.') ? t(err.message) : err.message);
+      } else {
+        setError(String(err));
+      }
     }
   };
 
   const deleteSnippet = async (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
-    if (!confirm('Are you sure you want to delete this snippet?')) return;
+    if (!confirm(t('snippets.confirmDelete', 'Are you sure you want to delete this snippet?'))) return;
 
     try {
-      const res = await fetch(`/api/snippets/${id}`, {
+      const res = await fetch(`${API_ENDPOINTS.SNIPPETS}/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
       });
       if (!res.ok) throw new Error('Failed to delete snippet');
       setSnippets(snippets.filter(s => s.id !== id));
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : String(err));
+      if (err instanceof Error) {
+        setError(err.message.startsWith('errors.') ? t(err.message) : err.message);
+      } else {
+        setError(String(err));
+      }
     }
   };
 
@@ -102,7 +117,7 @@ export const MySnippetsModal: React.FC<MySnippetsModalProps> = ({ isOpen, onClos
 
             <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-2 shrink-0">
               <FolderOpen className="w-5 h-5 text-blue-400" />
-              My Cloud Snippets
+              {t('snippets.mySnippets', 'My Cloud Snippets')}
             </h2>
 
             {error && (
@@ -119,7 +134,7 @@ export const MySnippetsModal: React.FC<MySnippetsModalProps> = ({ isOpen, onClos
               ) : snippets.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-48 text-gray-400">
                   <FileCode2 className="w-12 h-12 mb-3 opacity-50" />
-                  <p>You haven't saved any snippets yet.</p>
+                  <p>{t('snippets.noSnippets', "You haven't saved any snippets yet.")}</p>
                 </div>
               ) : (
                 snippets.map(snippet => (
@@ -143,7 +158,7 @@ export const MySnippetsModal: React.FC<MySnippetsModalProps> = ({ isOpen, onClos
                     <button
                       onClick={(e) => deleteSnippet(e, snippet.id)}
                       className="opacity-0 group-hover:opacity-100 p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-all"
-                      title="Delete Snippet"
+                      title={t('snippets.deleteSnippet', 'Delete Snippet')}
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>

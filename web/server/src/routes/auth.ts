@@ -11,12 +11,12 @@ router.post('/register', async (req: Request, res: Response) => {
   try {
     const { email, password, name } = req.body;
     if (!email || !password) {
-      return res.status(400).json({ error: 'Email and password are required' });
+      return res.status(400).json({ error: 'errors.missingCredentials' });
     }
 
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
-      return res.status(400).json({ error: 'Email is already registered' });
+      return res.status(400).json({ error: 'errors.emailTaken' });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -32,7 +32,7 @@ router.post('/register', async (req: Request, res: Response) => {
     res.status(201).json({ token, user: { id: user.id, email: user.email, name: user.name } });
   } catch (error) {
     console.error('Registration error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'errors.serverError' });
   }
 });
 
@@ -41,24 +41,24 @@ router.post('/login', async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      return res.status(400).json({ error: 'Email and password are required' });
+      return res.status(400).json({ error: 'errors.missingCredentials' });
     }
 
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user || !user.password) {
-      return res.status(401).json({ error: 'Invalid credentials' });
+      return res.status(401).json({ error: 'errors.invalidCredentials' });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ error: 'Invalid credentials' });
+      return res.status(401).json({ error: 'errors.invalidCredentials' });
     }
 
     const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '7d' });
     res.json({ token, user: { id: user.id, email: user.email, name: user.name } });
   } catch (error) {
     console.error('Login error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'errors.serverError' });
   }
 });
 
@@ -67,7 +67,7 @@ router.get('/me', async (req: Request, res: Response) => {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ error: 'Missing or invalid token' });
+      return res.status(401).json({ error: 'errors.invalidToken' });
     }
 
     const token = authHeader.split(' ')[1];
@@ -79,12 +79,12 @@ router.get('/me', async (req: Request, res: Response) => {
     });
 
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ error: 'errors.userNotFound' });
     }
 
     res.json({ user });
   } catch {
-    return res.status(401).json({ error: 'Invalid token' });
+    return res.status(401).json({ error: 'errors.invalidToken' });
   }
 });
 

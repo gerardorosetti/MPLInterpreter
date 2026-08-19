@@ -16,7 +16,7 @@ router.get('/', authMiddleware, async (req: AuthRequest, res: Response) => {
     res.json({ snippets });
   } catch (error) {
     console.error('Fetch snippets error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'errors.serverError' });
   }
 });
 
@@ -31,17 +31,17 @@ router.get('/:id', authMiddleware, async (req: AuthRequest, res: Response) => {
     });
 
     if (!snippet) {
-      return res.status(404).json({ error: 'Snippet not found' });
+      return res.status(404).json({ error: 'errors.snippetNotFound' });
     }
 
     if (snippet.userId !== userId && !snippet.isPublic) {
-      return res.status(403).json({ error: 'Forbidden' });
+      return res.status(403).json({ error: 'errors.forbidden' });
     }
 
     res.json({ snippet });
   } catch (error) {
     console.error('Fetch snippet error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'errors.serverError' });
   }
 });
 
@@ -53,15 +53,15 @@ router.post('/', authMiddleware, async (req: AuthRequest, res: Response) => {
     const id = req.body.id as string | undefined;
 
     if (!title || !content) {
-      return res.status(400).json({ error: 'Title and content are required' });
+      return res.status(400).json({ error: 'errors.missingSnippetData' });
     }
 
     let snippet;
     if (id) {
       // Update existing
       snippet = await prisma.snippet.findUnique({ where: { id } });
-      if (!snippet) return res.status(404).json({ error: 'Snippet not found' });
-      if (snippet.userId !== userId) return res.status(403).json({ error: 'Forbidden' });
+      if (!snippet) return res.status(404).json({ error: 'errors.snippetNotFound' });
+      if (snippet.userId !== userId) return res.status(403).json({ error: 'errors.forbidden' });
 
       snippet = await prisma.snippet.update({
         where: { id },
@@ -82,7 +82,7 @@ router.post('/', authMiddleware, async (req: AuthRequest, res: Response) => {
     res.json({ snippet });
   } catch (error) {
     console.error('Save snippet error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'errors.serverError' });
   }
 });
 
@@ -93,14 +93,14 @@ router.delete('/:id', authMiddleware, async (req: AuthRequest, res: Response) =>
     const id = req.params.id as string;
 
     const snippet = await prisma.snippet.findUnique({ where: { id } });
-    if (!snippet) return res.status(404).json({ error: 'Snippet not found' });
-    if (snippet.userId !== userId) return res.status(403).json({ error: 'Forbidden' });
+    if (!snippet) return res.status(404).json({ error: 'errors.snippetNotFound' });
+    if (snippet.userId !== userId) return res.status(403).json({ error: 'errors.forbidden' });
 
     await prisma.snippet.delete({ where: { id } });
     res.json({ success: true });
   } catch (error) {
     console.error('Delete snippet error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'errors.serverError' });
   }
 });
 

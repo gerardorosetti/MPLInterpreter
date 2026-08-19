@@ -11,14 +11,14 @@ const SAMPLES_DIR = path.resolve(__dirname, '../../../../samples');
 router.post('/run', rateLimiter, async (req: Request, res: Response) => {
   const { code } = req.body;
   if (!code) {
-    return res.status(400).json({ error: 'No code provided' });
+    return res.status(400).json({ error: 'errors.noCodeProvided' });
   }
 
   try {
     const result = await ExecutionService.executeCode(code);
     res.json(result);
   } catch (e: unknown) {
-    res.status(500).json({ error: e instanceof Error ? e.message : String(e) });
+    res.status(500).json({ error: e instanceof Error ? e.message : 'errors.serverError' });
   }
 });
 

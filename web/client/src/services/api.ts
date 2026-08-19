@@ -5,6 +5,15 @@
 
 const API_URL = import.meta.env.VITE_API_URL || '/api';
 
+export const API_ENDPOINTS = {
+  RUN: `${API_URL}/run`,
+  SAMPLES: `${API_URL}/samples`,
+  AUTH_LOGIN: `${API_URL}/auth/login`,
+  AUTH_REGISTER: `${API_URL}/auth/register`,
+  AUTH_ME: `${API_URL}/auth/me`,
+  SNIPPETS: `${API_URL}/snippets`,
+};
+
 /**
  * Interface representing the response from code execution.
  */
@@ -29,7 +38,7 @@ export const ApiService = {
    */
   async executeCode(code: string): Promise<ExecutionResponse> {
     try {
-      const response = await fetch(`${API_URL}/run`, {
+      const response = await fetch(API_ENDPOINTS.RUN, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -54,7 +63,7 @@ export const ApiService = {
    */
   async getSamples(): Promise<string[]> {
     try {
-      const response = await fetch(`${API_URL}/samples`);
+      const response = await fetch(API_ENDPOINTS.SAMPLES);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -73,7 +82,7 @@ export const ApiService = {
    */
   async getSampleContent(filename: string): Promise<string> {
     try {
-      const response = await fetch(`${API_URL}/samples/${filename}`);
+      const response = await fetch(`${API_ENDPOINTS.SAMPLES}/${filename}`);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }

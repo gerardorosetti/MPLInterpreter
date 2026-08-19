@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { Mail, Lock, Loader2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { API_ENDPOINTS } from '@/services/api';
 
 interface LoginFormProps {
   onSuccess: () => void;
@@ -14,6 +16,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onToggleMode })
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { login } = useAuth();
+  const { t } = useTranslation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,7 +24,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onToggleMode })
     setIsSubmitting(true);
 
     try {
-      const res = await fetch('/api/auth/login', {
+      const res = await fetch(API_ENDPOINTS.AUTH_LOGIN, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -36,7 +39,12 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onToggleMode })
       login(data.token, data.user);
       onSuccess();
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : String(err));
+      if (err instanceof Error) {
+        // If it starts with 'errors.', translate it, else display as is (or translate fallback)
+        setError(err.message.startsWith('errors.') ? t(err.message) : err.message);
+      } else {
+        setError(String(err));
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -50,7 +58,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onToggleMode })
       exit={{ opacity: 0, x: 20 }}
       className="w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-2xl"
     >
-      <h2 className="text-2xl font-semibold text-white mb-6 text-center">Welcome Back</h2>
+      <h2 className="text-2xl font-semibold text-white mb-6 text-center">{t('auth.welcomeBack', 'Welcome Back')}</h2>
       
       {error && (
         <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 text-red-400 rounded-lg text-sm text-center">
@@ -66,7 +74,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onToggleMode })
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email address"
+              placeholder={t('auth.email', 'Email address')}
               className="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all duration-300"
               required
             />
@@ -80,7 +88,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onToggleMode })
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
+              placeholder={t('auth.password', 'Password')}
               className="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all duration-300"
               required
             />
@@ -92,18 +100,18 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onToggleMode })
           disabled={isSubmitting}
           className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-xl transition-all duration-300 flex items-center justify-center active:scale-[0.98]"
         >
-          {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Sign In'}
+          {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : t('auth.signIn', 'Sign In')}
         </button>
       </form>
 
       <div className="mt-6 text-center">
         <p className="text-gray-400 text-sm">
-          Don't have an account?{' '}
+          {t('auth.noAccount', "Don't have an account?")}{' '}
           <button
             onClick={onToggleMode}
             className="text-blue-400 hover:text-blue-300 font-medium transition-colors"
           >
-            Create one
+            {t('auth.createOne', 'Create one')}
           </button>
         </p>
       </div>
