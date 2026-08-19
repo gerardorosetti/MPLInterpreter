@@ -30,7 +30,7 @@ import {
   Home,
 } from 'lucide-react';
 
-import { PaneType, AppLanguage, AuthMode } from '@/constants/enums';
+import { PaneType, AppLanguage, AuthMode, LocalStorageKey } from '@/constants/enums';
 import { useCodeExecution } from '@/hooks/useCodeExecution';
 import { ApiService } from '@/services/api';
 import Terminal from '@/components/Terminal';
@@ -76,6 +76,7 @@ const IdeWorkspace: React.FC = () => {
   const userMenuRef = useRef<HTMLDivElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const mobileButtonRef = useRef<HTMLButtonElement>(null);
+  const samplesMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -86,6 +87,15 @@ const IdeWorkspace: React.FC = () => {
         !userMenuRef.current.contains(event.target as Node)
       ) {
         setIsUserMenuOpen(false);
+      }
+
+      // Samples Menu
+      if (
+        isSamplesOpen &&
+        samplesMenuRef.current &&
+        !samplesMenuRef.current.contains(event.target as Node)
+      ) {
+        setIsSamplesOpen(false);
       }
 
       // Mobile Menu
@@ -102,12 +112,20 @@ const IdeWorkspace: React.FC = () => {
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isUserMenuOpen, isMobileMenuOpen]);
+  }, [isUserMenuOpen, isMobileMenuOpen, isSamplesOpen]);
 
   // Fetch samples on mount
   useEffect(() => {
     ApiService.getSamples().then(setSamples);
   }, []);
+
+  // Ensure language matches localStorage
+  useEffect(() => {
+    const savedLang = localStorage.getItem(LocalStorageKey.LANGUAGE);
+    if (savedLang && i18n.language !== savedLang) {
+      i18n.changeLanguage(savedLang);
+    }
+  }, [i18n]);
 
   const handleEditorWillMount = (monaco: Monaco) => {
     monaco.languages.register({ id: 'mpl' });
@@ -306,7 +324,7 @@ const IdeWorkspace: React.FC = () => {
             {i18n.language.toUpperCase()}
           </button>
 
-          <div className="relative hidden md:block">
+          <div className="relative hidden md:block" ref={samplesMenuRef}>
             <button
               onClick={() => setIsSamplesOpen(!isSamplesOpen)}
               className="flex items-center gap-2 px-4 py-1.5 bg-secondary hover:bg-secondary/80 text-secondary-foreground rounded-md text-sm font-medium transition-colors"
@@ -532,6 +550,98 @@ const IdeWorkspace: React.FC = () => {
                 >
                   {i18n.language}
                 </button>
+              </div>
+
+              {/* Mobile User Options */}
+              <div className="border-t border-border pt-4 flex flex-col gap-2">
+                {user ? (
+                  <>
+                    <div className="flex items-center gap-3 mb-2 px-2">
+                      <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-medium">
+                        {user.name ? user.name[0].toUpperCase() : user.email[0].toUpperCase()}
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-sm font-medium">{user.name || 'User'}</span>
+                        <span className="text-xs text-muted-foreground">{user.email}</span>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        setIsMySnippetsOpen(true);
+                      }}
+                      className="flex items-center gap-3 px-3 py-2 text-sm text-foreground hover:bg-muted/50 rounded-md transition-colors"
+                    >
+                      <FileCode2 className="w-4 h-4 text-muted-foreground" />
+                      {t('snippets.mySnippets')}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        handleSaveToCloud();
+                      }}
+                      className="flex items-center gap-3 px-3 py-2 text-sm text-foreground hover:bg-muted/50 rounded-md transition-colors"
+                    >
+                      <Cloud className="w-4 h-4 text-muted-foreground" />
+                      {t('snippets.saveToCloud')}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        downloadScript();
+                      }}
+                      className="flex items-center gap-3 px-3 py-2 text-sm text-foreground hover:bg-muted/50 rounded-md transition-colors"
+                    >
+                      <Download className="w-4 h-4 text-muted-foreground" />
+                      {t('app.download')}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        logout();
+                      }}
+                      className="flex items-center gap-3 px-3 py-2 text-sm text-red-500 hover:bg-red-500/10 rounded-md transition-colors mt-2"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      {t('auth.logout')}
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        setAuthMode(AuthMode.LOGIN);
+                        setIsAuthModalOpen(true);
+                      }}
+                      className="flex items-center gap-3 px-3 py-2 text-sm text-foreground hover:bg-muted/50 rounded-md transition-colors"
+                    >
+                      <LogOut className="w-4 h-4 text-muted-foreground rotate-180" />
+                      {t('auth.signIn')}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        setAuthMode(AuthMode.REGISTER);
+                        setIsAuthModalOpen(true);
+                      }}
+                      className="flex items-center gap-3 px-3 py-2 text-sm text-foreground hover:bg-muted/50 rounded-md transition-colors"
+                    >
+                      <Plus className="w-4 h-4 text-muted-foreground" />
+                      {t('auth.createAccount')}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        downloadScript();
+                      }}
+                      className="flex items-center gap-3 px-3 py-2 text-sm text-foreground hover:bg-muted/50 rounded-md transition-colors"
+                    >
+                      <Download className="w-4 h-4 text-muted-foreground" />
+                      {t('app.download')}
+                    </button>
+                  </>
+                )}
               </div>
               <div className="flex flex-col gap-2">
                 <span className="text-sm font-medium">{t('app.samples')}</span>

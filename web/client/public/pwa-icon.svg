@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563eb" />
+      <stop offset="100%" stop-color="#7c3aed" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="15" stdDeviation="20" flood-color="#000" flood-opacity="0.4" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" rx="112" fill="url(#bg)" />
+
+  <!-- Terminal Window -->
+  <rect x="70" y="110" width="372" height="292" rx="24" fill="#09090b" filter="url(#shadow)" />
+  
+  <!-- Terminal Top Bar -->
+  <path d="M 70 134 C 70 120.745 80.745 110 94 110 L 418 110 C 431.255 110 442 120.745 442 134 L 442 160 L 70 160 Z" fill="#18181b" />
+  
+  <!-- Terminal Buttons -->
+  <circle cx="110" cy="135" r="9" fill="#ef4444" />
+  <circle cx="145" cy="135" r="9" fill="#eab308" />
+  <circle cx="180" cy="135" r="9" fill="#22c55e" />
+
+  <!-- Code / Math Symbols -->
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="28">
+    <!-- Prompt Arrow: > -->
+    <path d="M 110 220 L 150 260 L 110 300" stroke="#3b82f6" />
+    
+    <!-- Mathematical Integration Symbol & f(x) -->
+    <!-- Integral sign -->
+    <path d="M 230 330 C 230 330 210 330 210 300 C 210 250 250 220 250 180 C 250 150 230 150 230 150" stroke="#a855f7" stroke-width="20" />
+    
+    <!-- f(x) -->
+    <path d="M 290 280 C 290 280 270 280 270 250 C 270 220 300 220 300 190" stroke="#ec4899" stroke-width="20" />
+    <path d="M 260 235 L 310 235" stroke="#ec4899" stroke-width="15" />
+    
+    <!-- (x) -->
+    <path d="M 330 270 C 310 270 310 210 330 210" stroke="#e2e8f0" stroke-width="16" />
+    <path d="M 350 220 L 390 260 M 390 220 L 350 260" stroke="#e2e8f0" stroke-width="16" />
+    <path d="M 410 210 C 430 210 430 270 410 270" stroke="#e2e8f0" stroke-width="16" />
+  </g>
+</svg>
