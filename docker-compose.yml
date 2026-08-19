@@ -27,7 +27,30 @@ services:
     command: bash -c "make && cd /app/web/server && npm install && cd /app/web/client && npm install && (npm run dev &) && cd /app/web/server && npm run dev"
     networks:
       - public-reverse-proxy
+      - default
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: mpl-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: mpl_user
+      POSTGRES_PASSWORD: mpl_password
+      POSTGRES_DB: mpl_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    container_name: mpl-redis
+    restart: unless-stopped
+    volumes:
+      - redisdata:/data
 
 networks:
   public-reverse-proxy:
     external: true
+
+volumes:
+  pgdata:
+  redisdata:

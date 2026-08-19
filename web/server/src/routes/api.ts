@@ -3,10 +3,12 @@ import { ExecutionService } from '@/services/ExecutionService';
 import * as fs from 'fs';
 import * as path from 'path';
 
+import { rateLimiter } from '@/middlewares/rateLimiter';
+
 const router = Router();
 const SAMPLES_DIR = path.resolve(__dirname, '../../../../samples');
 
-router.post('/run', async (req: Request, res: Response) => {
+router.post('/run', rateLimiter, async (req: Request, res: Response) => {
   const { code } = req.body;
   if (!code) {
     return res.status(400).json({ error: 'No code provided' });
