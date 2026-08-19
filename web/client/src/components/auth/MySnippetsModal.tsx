@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { FolderOpen, X, FileCode2, Trash2, Loader2, Clock } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { API_ENDPOINTS } from '@/services/api';
+import { handleApiError } from '@/utils/errorHelper';
 
 interface Snippet {
   id: string;
@@ -18,7 +19,11 @@ interface MySnippetsModalProps {
   onLoadSnippet: (title: string, content: string) => void;
 }
 
-export const MySnippetsModal: React.FC<MySnippetsModalProps> = ({ isOpen, onClose, onLoadSnippet }) => {
+export const MySnippetsModal: React.FC<MySnippetsModalProps> = ({
+  isOpen,
+  onClose,
+  onLoadSnippet,
+}) => {
   const [snippets, setSnippets] = useState<Snippet[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -36,17 +41,16 @@ export const MySnippetsModal: React.FC<MySnippetsModalProps> = ({ isOpen, onClos
     setError('');
     try {
       const res = await fetch(API_ENDPOINTS.SNIPPETS, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
-      if (!res.ok) throw new Error('Failed to fetch snippets');
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || 'errors.serverError');
+      }
       const data = await res.json();
       setSnippets(data.snippets);
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message.startsWith('errors.') ? t(err.message) : err.message);
-      } else {
-        setError(String(err));
-      }
+      setError(handleApiError(err, t));
     } finally {
       setIsLoading(false);
     }
@@ -55,38 +59,37 @@ export const MySnippetsModal: React.FC<MySnippetsModalProps> = ({ isOpen, onClos
   const loadSnippet = async (id: string, title: string) => {
     try {
       const res = await fetch(`${API_ENDPOINTS.SNIPPETS}/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
-      if (!res.ok) throw new Error('Failed to load snippet');
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || 'errors.serverError');
+      }
       const data = await res.json();
       onLoadSnippet(title, data.snippet.content);
       onClose();
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message.startsWith('errors.') ? t(err.message) : err.message);
-      } else {
-        setError(String(err));
-      }
+      setError(handleApiError(err, t));
     }
   };
 
   const deleteSnippet = async (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
-    if (!confirm(t('snippets.confirmDelete', 'Are you sure you want to delete this snippet?'))) return;
+    if (!confirm(t('snippets.confirmDelete', 'Are you sure you want to delete this snippet?')))
+      return;
 
     try {
       const res = await fetch(`${API_ENDPOINTS.SNIPPETS}/${id}`, {
         method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
-      if (!res.ok) throw new Error('Failed to delete snippet');
-      setSnippets(snippets.filter(s => s.id !== id));
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message.startsWith('errors.') ? t(err.message) : err.message);
-      } else {
-        setError(String(err));
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || 'errors.serverError');
       }
+      setSnippets(snippets.filter((s) => s.id !== id));
+    } catch (err: unknown) {
+      setError(handleApiError(err, t));
     }
   };
 
@@ -101,14 +104,14 @@ export const MySnippetsModal: React.FC<MySnippetsModalProps> = ({ isOpen, onClos
             onClick={onClose}
             className="absolute inset-0 bg-black/60 backdrop-blur-md"
           />
-          
+
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             className="relative z-10 w-full max-w-2xl bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl flex flex-col h-[80vh] max-h-[600px]"
           >
-            <button 
+            <button
               onClick={onClose}
               className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
             >
@@ -137,7 +140,7 @@ export const MySnippetsModal: React.FC<MySnippetsModalProps> = ({ isOpen, onClos
                   <p>{t('snippets.noSnippets', "You haven't saved any snippets yet.")}</p>
                 </div>
               ) : (
-                snippets.map(snippet => (
+                snippets.map((snippet) => (
                   <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -154,7 +157,7 @@ export const MySnippetsModal: React.FC<MySnippetsModalProps> = ({ isOpen, onClos
                         {new Date(snippet.updatedAt).toLocaleDateString()}
                       </p>
                     </div>
-                    
+
                     <button
                       onClick={(e) => deleteSnippet(e, snippet.id)}
                       className="opacity-0 group-hover:opacity-100 p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-all"

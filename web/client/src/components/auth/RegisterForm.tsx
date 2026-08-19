@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Mail, Lock, User, Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { API_ENDPOINTS } from '@/services/api';
+import { handleApiError } from '@/utils/errorHelper';
 
 interface RegisterFormProps {
   onSuccess: () => void;
@@ -34,17 +35,13 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onToggleM
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || 'Registration failed');
+        throw new Error(data.error || 'errors.serverError');
       }
 
       login(data.token, data.user);
       onSuccess();
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message.startsWith('errors.') ? t(err.message) : err.message);
-      } else {
-        setError(String(err));
-      }
+      setError(handleApiError(err, t));
     } finally {
       setIsSubmitting(false);
     }
@@ -58,8 +55,10 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onToggleM
       exit={{ opacity: 0, x: -20 }}
       className="w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-2xl"
     >
-      <h2 className="text-2xl font-semibold text-white mb-6 text-center">{t('auth.createAccount', 'Create an Account')}</h2>
-      
+      <h2 className="text-2xl font-semibold text-white mb-6 text-center">
+        {t('auth.createAccount', 'Create an Account')}
+      </h2>
+
       {error && (
         <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 text-red-400 rounded-lg text-sm text-center">
           {error}
@@ -114,7 +113,11 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onToggleM
           disabled={isSubmitting}
           className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-xl transition-all duration-300 flex items-center justify-center active:scale-[0.98]"
         >
-          {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : t('auth.createAccount', 'Create Account')}
+          {isSubmitting ? (
+            <Loader2 className="w-5 h-5 animate-spin" />
+          ) : (
+            t('auth.createAccount', 'Create Account')
+          )}
         </button>
       </form>
 

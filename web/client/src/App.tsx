@@ -22,7 +22,7 @@ import {
   X,
   Menu,
   LogOut,
-  Save
+  Save,
 } from 'lucide-react';
 
 import { PaneType, AppLanguage } from '@/constants/enums';
@@ -64,7 +64,7 @@ const App: React.FC = () => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
   const [isMySnippetsOpen, setIsMySnippetsOpen] = useState(false);
-  
+
   const { user, logout } = useAuth();
 
   // Fetch samples on mount
@@ -283,13 +283,19 @@ const App: React.FC = () => {
             {!user ? (
               <>
                 <button
-                  onClick={() => { setAuthModalMode('login'); setIsAuthModalOpen(true); }}
+                  onClick={() => {
+                    setAuthModalMode('login');
+                    setIsAuthModalOpen(true);
+                  }}
                   className="px-3 py-1.5 text-sm font-medium hover:bg-muted/50 rounded-md transition-colors"
                 >
                   Log In
                 </button>
                 <button
-                  onClick={() => { setAuthModalMode('register'); setIsAuthModalOpen(true); }}
+                  onClick={() => {
+                    setAuthModalMode('register');
+                    setIsAuthModalOpen(true);
+                  }}
                   className="px-3 py-1.5 text-sm font-medium bg-secondary hover:bg-secondary/80 text-secondary-foreground rounded-md transition-colors"
                 >
                   Sign Up
@@ -301,9 +307,11 @@ const App: React.FC = () => {
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                   className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-medium hover:ring-2 hover:ring-blue-400 transition-all"
                 >
-                  {user.name ? user.name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
+                  {user.name
+                    ? user.name.charAt(0).toUpperCase()
+                    : user.email.charAt(0).toUpperCase()}
                 </button>
-                
+
                 <AnimatePresence>
                   {isUserMenuOpen && (
                     <motion.div
@@ -317,15 +325,21 @@ const App: React.FC = () => {
                         <p className="text-xs text-muted-foreground truncate">{user.email}</p>
                       </div>
                       <div className="py-1">
-                        <button 
-                          onClick={() => { setIsMySnippetsOpen(true); setIsUserMenuOpen(false); }}
+                        <button
+                          onClick={() => {
+                            setIsMySnippetsOpen(true);
+                            setIsUserMenuOpen(false);
+                          }}
                           className="w-full text-left px-4 py-2 text-sm hover:bg-muted transition-colors flex items-center gap-2"
                         >
                           <FileCode2 className="w-4 h-4" />
                           My Snippets
                         </button>
-                        <button 
-                          onClick={() => { logout(); setIsUserMenuOpen(false); }}
+                        <button
+                          onClick={() => {
+                            logout();
+                            setIsUserMenuOpen(false);
+                          }}
                           className="w-full text-left px-4 py-2 text-sm hover:bg-red-500/10 text-red-500 transition-colors flex items-center gap-2"
                         >
                           <LogOut className="w-4 h-4" />
@@ -420,10 +434,10 @@ const App: React.FC = () => {
         </AnimatePresence>
       </header>
 
-      <AuthModal 
-        isOpen={isAuthModalOpen} 
-        onClose={() => setIsAuthModalOpen(false)} 
-        defaultMode={authModalMode} 
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        defaultMode={authModalMode}
       />
 
       <SaveSnippetModal

@@ -5,6 +5,8 @@
 
 import { useState } from 'react';
 import { ApiService } from '@/services/api';
+import { useTranslation } from 'react-i18next';
+import { handleApiError } from '@/utils/errorHelper';
 
 /**
  * Hook to execute MPL code and manage loading/error states.
@@ -12,6 +14,7 @@ import { ApiService } from '@/services/api';
 export const useCodeExecution = () => {
   const [output, setOutput] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { t } = useTranslation();
 
   /**
    * Executes the given MPL code.
@@ -19,16 +22,16 @@ export const useCodeExecution = () => {
    */
   const execute = async (code: string) => {
     setIsLoading(true);
-    setOutput('Executing...\n');
+    setOutput(`${t('app.executing', 'Executing...')}\n`);
     try {
       const result = await ApiService.executeCode(code);
       let finalOutput = '';
       if (result.error) finalOutput += `Error: ${result.error}\n`;
       if (result.stderr) finalOutput += `Stderr: ${result.stderr}\n`;
       if (result.stdout) finalOutput += result.stdout;
-      setOutput(finalOutput || 'No output.');
+      setOutput(finalOutput || t('app.noOutput', 'No output.'));
     } catch (error: unknown) {
-      setOutput(error instanceof Error ? error.message : String(error));
+      setOutput(handleApiError(error, t));
     } finally {
       setIsLoading(false);
     }

@@ -9,7 +9,9 @@
         "output": "Output",
         "liveRepl": "Live REPL",
         "outputPlaceholder": "Output will appear here...",
-        "backendError": "Failed to connect to the MPL engine. Is the backend running?"
+        "backendError": "Failed to connect to the MPL engine. Is the backend running?",
+        "executing": "Executing...",
+        "noOutput": "No output."
     },
     "docs": {
         "title": "📖 MPL ULA - Reference Guide",
@@ -51,7 +53,8 @@
         "snippetNotFound": "Snippet not found.",
         "forbidden": "Forbidden access.",
         "missingSnippetData": "Title and content are required.",
-        "noCodeProvided": "No code provided."
+        "noCodeProvided": "No code provided.",
+        "unknownError": "An unknown error occurred."
     },
     "auth": {
         "welcomeBack": "Welcome Back",

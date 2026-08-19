@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Mail, Lock, Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { API_ENDPOINTS } from '@/services/api';
+import { handleApiError } from '@/utils/errorHelper';
 
 interface LoginFormProps {
   onSuccess: () => void;
@@ -33,18 +34,13 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onToggleMode })
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || 'Login failed');
+        throw new Error(data.error || 'errors.serverError');
       }
 
       login(data.token, data.user);
       onSuccess();
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        // If it starts with 'errors.', translate it, else display as is (or translate fallback)
-        setError(err.message.startsWith('errors.') ? t(err.message) : err.message);
-      } else {
-        setError(String(err));
-      }
+      setError(handleApiError(err, t));
     } finally {
       setIsSubmitting(false);
     }
@@ -58,8 +54,10 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onToggleMode })
       exit={{ opacity: 0, x: 20 }}
       className="w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-2xl"
     >
-      <h2 className="text-2xl font-semibold text-white mb-6 text-center">{t('auth.welcomeBack', 'Welcome Back')}</h2>
-      
+      <h2 className="text-2xl font-semibold text-white mb-6 text-center">
+        {t('auth.welcomeBack', 'Welcome Back')}
+      </h2>
+
       {error && (
         <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 text-red-400 rounded-lg text-sm text-center">
           {error}
@@ -100,7 +98,11 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onToggleMode })
           disabled={isSubmitting}
           className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-xl transition-all duration-300 flex items-center justify-center active:scale-[0.98]"
         >
-          {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : t('auth.signIn', 'Sign In')}
+          {isSubmitting ? (
+            <Loader2 className="w-5 h-5 animate-spin" />
+          ) : (
+            t('auth.signIn', 'Sign In')
+          )}
         </button>
       </form>
 

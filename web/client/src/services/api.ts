@@ -47,7 +47,8 @@ export const ApiService = {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'errors.serverError');
       }
 
       return await response.json();
@@ -65,7 +66,8 @@ export const ApiService = {
     try {
       const response = await fetch(API_ENDPOINTS.SAMPLES);
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'errors.serverError');
       }
       const data = await response.json();
       return data.samples || [];
@@ -84,7 +86,8 @@ export const ApiService = {
     try {
       const response = await fetch(`${API_ENDPOINTS.SAMPLES}/${filename}`);
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'errors.serverError');
       }
       const data = await response.json();
       return data.content || '';

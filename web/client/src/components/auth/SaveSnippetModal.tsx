@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Save, X, Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { API_ENDPOINTS } from '@/services/api';
+import { handleApiError } from '@/utils/errorHelper';
 
 interface SaveSnippetModalProps {
   isOpen: boolean;
@@ -11,7 +12,11 @@ interface SaveSnippetModalProps {
   currentContent: string;
 }
 
-export const SaveSnippetModal: React.FC<SaveSnippetModalProps> = ({ isOpen, onClose, currentContent }) => {
+export const SaveSnippetModal: React.FC<SaveSnippetModalProps> = ({
+  isOpen,
+  onClose,
+  currentContent,
+}) => {
   const [title, setTitle] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -30,27 +35,24 @@ export const SaveSnippetModal: React.FC<SaveSnippetModalProps> = ({ isOpen, onCl
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           title,
           content: currentContent,
-          isPublic: false
-        })
+          isPublic: false,
+        }),
       });
 
       if (!res.ok) {
-        throw new Error('Failed to save snippet');
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'errors.serverError');
       }
 
       onClose();
       setTitle('');
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message.startsWith('errors.') ? t(err.message) : err.message);
-      } else {
-        setError(String(err));
-      }
+      setError(handleApiError(err, t));
     } finally {
       setIsSubmitting(false);
     }
@@ -67,14 +69,14 @@ export const SaveSnippetModal: React.FC<SaveSnippetModalProps> = ({ isOpen, onCl
             onClick={onClose}
             className="absolute inset-0 bg-black/60 backdrop-blur-md"
           />
-          
+
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             className="relative z-10 w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl"
           >
-            <button 
+            <button
               onClick={onClose}
               className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
             >
@@ -94,7 +96,9 @@ export const SaveSnippetModal: React.FC<SaveSnippetModalProps> = ({ isOpen, onCl
 
             <form onSubmit={handleSave} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">{t('snippets.snippetTitle', 'Snippet Title')}</label>
+                <label className="block text-sm font-medium text-gray-300 mb-1">
+                  {t('snippets.snippetTitle', 'Snippet Title')}
+                </label>
                 <input
                   type="text"
                   value={title}
@@ -119,7 +123,11 @@ export const SaveSnippetModal: React.FC<SaveSnippetModalProps> = ({ isOpen, onCl
                   disabled={isSubmitting || !title.trim()}
                   className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-xl transition-all duration-300 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : t('common.save', 'Save')}
+                  {isSubmitting ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    t('common.save', 'Save')
+                  )}
                 </button>
               </div>
             </form>

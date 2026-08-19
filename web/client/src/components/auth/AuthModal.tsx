@@ -24,22 +24,22 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, defaultMo
             onClick={onClose}
             className="absolute inset-0 bg-black/60 backdrop-blur-md"
           />
-          
+
           <div className="relative z-10 w-full max-w-md flex flex-col items-center">
             {/* Forms wrapper for height transitions */}
             <div className="relative w-full">
               <AnimatePresence mode="wait">
                 {mode === 'login' ? (
-                  <LoginForm 
-                    key="login" 
-                    onSuccess={onClose} 
-                    onToggleMode={() => setMode('register')} 
+                  <LoginForm
+                    key="login"
+                    onSuccess={onClose}
+                    onToggleMode={() => setMode('register')}
                   />
                 ) : (
-                  <RegisterForm 
-                    key="register" 
-                    onSuccess={onClose} 
-                    onToggleMode={() => setMode('login')} 
+                  <RegisterForm
+                    key="register"
+                    onSuccess={onClose}
+                    onToggleMode={() => setMode('login')}
                   />
                 )}
               </AnimatePresence>

@@ -9,7 +9,9 @@
         "output": "Salida",
         "liveRepl": "Terminal en Vivo",
         "outputPlaceholder": "La salida aparecerá aquí...",
-        "backendError": "Fallo al conectar con el motor MPL. ¿Está corriendo el backend?"
+        "backendError": "Fallo al conectar con el motor MPL. ¿Está corriendo el backend?",
+        "executing": "Ejecutando...",
+        "noOutput": "Sin salida."
     },
     "docs": {
         "title": "📖 MPL ULA - Guía de Referencia",
@@ -51,7 +53,8 @@
         "snippetNotFound": "Fragmento de código no encontrado.",
         "forbidden": "Acceso denegado.",
         "missingSnippetData": "El título y contenido son requeridos.",
-        "noCodeProvided": "No se ha proporcionado código."
+        "noCodeProvided": "No se ha proporcionado código.",
+        "unknownError": "Ocurrió un error desconocido."
     },
     "auth": {
         "welcomeBack": "Bienvenido de Nuevo",
