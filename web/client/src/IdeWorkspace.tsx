@@ -18,16 +18,16 @@ import {
   Terminal as TermIcon,
   FileOutput,
   Download,
-  Cloud,
-  Globe,
+  Menu,
   Sun,
   Moon,
-  X,
-  Menu,
-  LogOut,
   Save,
   Upload,
+  LogOut,
+  Cloud,
   Home,
+  Globe,
+  X,
 } from 'lucide-react';
 
 import { PaneType, AppLanguage, AuthMode, LocalStorageKey } from '@/constants/enums';
@@ -71,11 +71,11 @@ const IdeWorkspace: React.FC = () => {
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
   const [isMySnippetsOpen, setIsMySnippetsOpen] = useState(false);
 
+  const [isSamplesAccordionOpen, setIsSamplesAccordionOpen] = useState(false);
+
   const { user, logout } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
-  const mobileMenuRef = useRef<HTMLDivElement>(null);
-  const mobileButtonRef = useRef<HTMLButtonElement>(null);
   const samplesMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -98,34 +98,18 @@ const IdeWorkspace: React.FC = () => {
         setIsSamplesOpen(false);
       }
 
-      // Mobile Menu
-      if (
-        isMobileMenuOpen &&
-        mobileMenuRef.current &&
-        !mobileMenuRef.current.contains(event.target as Node) &&
-        mobileButtonRef.current &&
-        !mobileButtonRef.current.contains(event.target as Node)
-      ) {
-        setIsMobileMenuOpen(false);
-      }
+      // Mobile Menu is now full screen overlay, clicking the backdrop closes it natively,
+      // so we don't need to listen to document mousedown for mobile menu anymore.
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isUserMenuOpen, isMobileMenuOpen, isSamplesOpen]);
+  }, [isUserMenuOpen, isSamplesOpen]);
 
   // Fetch samples on mount
   useEffect(() => {
     ApiService.getSamples().then(setSamples);
   }, []);
-
-  // Ensure language matches localStorage
-  useEffect(() => {
-    const savedLang = localStorage.getItem(LocalStorageKey.LANGUAGE);
-    if (savedLang && i18n.language !== savedLang) {
-      i18n.changeLanguage(savedLang);
-    }
-  }, [i18n]);
 
   const handleEditorWillMount = (monaco: Monaco) => {
     monaco.languages.register({ id: 'mpl' });
@@ -282,7 +266,7 @@ const IdeWorkspace: React.FC = () => {
   const toggleLanguage = () => {
     const newLang = i18n.language === AppLanguage.EN ? AppLanguage.ES : AppLanguage.EN;
     i18n.changeLanguage(newLang);
-    localStorage.setItem('language', newLang);
+    localStorage.setItem(LocalStorageKey.LANGUAGE, newLang);
   };
 
   return (
@@ -506,7 +490,6 @@ const IdeWorkspace: React.FC = () => {
 
           {/* Mobile Hamburger */}
           <button
-            ref={mobileButtonRef}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="md:hidden p-2 rounded-md hover:bg-muted/50 text-muted-foreground transition-colors"
           >
@@ -514,150 +497,243 @@ const IdeWorkspace: React.FC = () => {
           </button>
         </div>
 
-        {/* Mobile Menu Dropdown */}
+        {/* Mobile Menu Slide-Over Drawer */}
         <AnimatePresence>
           {isMobileMenuOpen && (
-            <motion.div
-              ref={mobileMenuRef}
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="absolute top-16 left-0 right-0 bg-card border-b border-border shadow-xl z-50 flex flex-col p-4 md:hidden gap-4"
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">{t('app.home')}</span>
-                <button
-                  onClick={() => navigate('/')}
-                  className="p-2 rounded-md bg-muted/50 text-foreground"
-                >
-                  <Home className="w-4 h-4" />
-                </button>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">{t('app.theme')}</span>
-                <button
-                  onClick={toggleTheme}
-                  className="p-2 rounded-md bg-muted/50 text-foreground"
-                >
-                  {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-                </button>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">{t('app.language')}</span>
-                <button
-                  onClick={toggleLanguage}
-                  className="p-2 rounded-md bg-muted/50 text-foreground uppercase"
-                >
-                  {i18n.language}
-                </button>
-              </div>
+            <>
+              {/* Backdrop */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 md:hidden"
+              />
+              {/* Drawer */}
+              <motion.div
+                initial={{ x: '100%' }}
+                animate={{ x: 0 }}
+                exit={{ x: '100%' }}
+                transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
+                className="fixed top-0 right-0 bottom-0 w-[85%] max-w-sm bg-card border-l border-border shadow-2xl z-50 flex flex-col md:hidden overflow-y-auto"
+              >
+                {/* Header & Close */}
+                <div className="flex items-center justify-between p-4 border-b border-border bg-muted/10">
+                  <span className="font-bold tracking-tight text-lg">MPL Menu</span>
+                  <button
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="p-2 rounded-md bg-muted/50 text-foreground hover:bg-muted transition-colors"
+                  >
+                    <Plus className="w-5 h-5 rotate-45" />
+                  </button>
+                </div>
 
-              {/* Mobile User Options */}
-              <div className="border-t border-border pt-4 flex flex-col gap-2">
-                {user ? (
-                  <>
-                    <div className="flex items-center gap-3 mb-2 px-2">
-                      <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-medium">
+                {/* User Profile Area */}
+                <div className="p-4 border-b border-border bg-card">
+                  {user ? (
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold text-lg shadow-inner">
                         {user.name ? user.name[0].toUpperCase() : user.email[0].toUpperCase()}
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-sm font-medium">{user.name || 'User'}</span>
+                        <span className="text-sm font-semibold">{user.name || 'User'}</span>
                         <span className="text-xs text-muted-foreground">{user.email}</span>
                       </div>
                     </div>
-                    <button
-                      onClick={() => {
-                        setIsMobileMenuOpen(false);
-                        setIsMySnippetsOpen(true);
-                      }}
-                      className="flex items-center gap-3 px-3 py-2 text-sm text-foreground hover:bg-muted/50 rounded-md transition-colors"
-                    >
-                      <FileCode2 className="w-4 h-4 text-muted-foreground" />
-                      {t('snippets.mySnippets')}
-                    </button>
-                    <button
-                      onClick={() => {
-                        setIsMobileMenuOpen(false);
-                        handleSaveToCloud();
-                      }}
-                      className="flex items-center gap-3 px-3 py-2 text-sm text-foreground hover:bg-muted/50 rounded-md transition-colors"
-                    >
-                      <Cloud className="w-4 h-4 text-muted-foreground" />
-                      {t('snippets.saveToCloud')}
-                    </button>
-                    <button
-                      onClick={() => {
-                        setIsMobileMenuOpen(false);
-                        downloadScript();
-                      }}
-                      className="flex items-center gap-3 px-3 py-2 text-sm text-foreground hover:bg-muted/50 rounded-md transition-colors"
-                    >
-                      <Download className="w-4 h-4 text-muted-foreground" />
-                      {t('app.download')}
-                    </button>
-                    <button
-                      onClick={() => {
-                        setIsMobileMenuOpen(false);
-                        logout();
-                      }}
-                      className="flex items-center gap-3 px-3 py-2 text-sm text-red-500 hover:bg-red-500/10 rounded-md transition-colors mt-2"
-                    >
-                      <LogOut className="w-4 h-4" />
-                      {t('auth.logout')}
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <button
-                      onClick={() => {
-                        setIsMobileMenuOpen(false);
-                        setAuthMode(AuthMode.LOGIN);
-                        setIsAuthModalOpen(true);
-                      }}
-                      className="flex items-center gap-3 px-3 py-2 text-sm text-foreground hover:bg-muted/50 rounded-md transition-colors"
-                    >
-                      <LogOut className="w-4 h-4 text-muted-foreground rotate-180" />
-                      {t('auth.signIn')}
-                    </button>
-                    <button
-                      onClick={() => {
-                        setIsMobileMenuOpen(false);
-                        setAuthMode(AuthMode.REGISTER);
-                        setIsAuthModalOpen(true);
-                      }}
-                      className="flex items-center gap-3 px-3 py-2 text-sm text-foreground hover:bg-muted/50 rounded-md transition-colors"
-                    >
-                      <Plus className="w-4 h-4 text-muted-foreground" />
-                      {t('auth.createAccount')}
-                    </button>
-                    <button
-                      onClick={() => {
-                        setIsMobileMenuOpen(false);
-                        downloadScript();
-                      }}
-                      className="flex items-center gap-3 px-3 py-2 text-sm text-foreground hover:bg-muted/50 rounded-md transition-colors"
-                    >
-                      <Download className="w-4 h-4 text-muted-foreground" />
-                      {t('app.download')}
-                    </button>
-                  </>
-                )}
-              </div>
-              <div className="flex flex-col gap-2">
-                <span className="text-sm font-medium">{t('app.samples')}</span>
-                <div className="flex flex-col gap-1 max-h-48 overflow-y-auto">
-                  {samples.map((s, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => loadSample(s)}
-                      className="w-full text-left px-3 py-2 text-sm bg-muted/30 hover:bg-muted rounded-md transition-colors"
-                    >
-                      {s.replace('.mpl', '')}
-                    </button>
-                  ))}
+                  ) : (
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center">
+                        <TermIcon className="w-5 h-5 text-blue-400" />
+                      </div>
+                      <span className="text-sm font-medium text-muted-foreground">
+                        {t('auth.continueAsGuest', 'Guest Mode')}
+                      </span>
+                    </div>
+                  )}
                 </div>
-              </div>
-            </motion.div>
+
+                <div className="p-4 flex flex-col gap-6">
+                  {/* General Settings */}
+                  <div className="flex flex-col gap-2">
+                    <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+                      General
+                    </span>
+                    <div className="flex items-center justify-between p-3 rounded-lg bg-muted/20 border border-border/50">
+                      <div className="flex items-center gap-3">
+                        <Home className="w-4 h-4 text-muted-foreground" />
+                        <span className="text-sm font-medium">{t('app.home')}</span>
+                      </div>
+                      <button
+                        onClick={() => navigate('/')}
+                        className="px-3 py-1 text-xs font-medium bg-muted/50 rounded-md"
+                      >
+                        Go
+                      </button>
+                    </div>
+                    <div className="flex items-center justify-between p-3 rounded-lg bg-muted/20 border border-border/50">
+                      <div className="flex items-center gap-3">
+                        {theme === 'dark' ? (
+                          <Moon className="w-4 h-4 text-muted-foreground" />
+                        ) : (
+                          <Sun className="w-4 h-4 text-muted-foreground" />
+                        )}
+                        <span className="text-sm font-medium">{t('app.theme')}</span>
+                      </div>
+                      <button
+                        onClick={toggleTheme}
+                        className="px-3 py-1 text-xs font-medium bg-muted/50 rounded-md"
+                      >
+                        Toggle
+                      </button>
+                    </div>
+                    <div className="flex items-center justify-between p-3 rounded-lg bg-muted/20 border border-border/50">
+                      <div className="flex items-center gap-3">
+                        <Globe className="w-4 h-4 text-muted-foreground" />
+                        <span className="text-sm font-medium">{t('app.language')}</span>
+                      </div>
+                      <button
+                        onClick={toggleLanguage}
+                        className="px-3 py-1 text-xs font-medium bg-muted/50 rounded-md uppercase"
+                      >
+                        {i18n.language}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* User Actions */}
+                  <div className="flex flex-col gap-2">
+                    <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+                      Actions
+                    </span>
+                    {user ? (
+                      <>
+                        <button
+                          onClick={() => {
+                            setIsMobileMenuOpen(false);
+                            setIsMySnippetsOpen(true);
+                          }}
+                          className="flex items-center gap-3 w-full p-3 text-sm text-foreground hover:bg-muted/50 rounded-lg transition-colors border border-transparent hover:border-border/50 text-left"
+                        >
+                          <FileCode2 className="w-4 h-4 text-blue-400" />
+                          <span className="flex-1">{t('snippets.mySnippets')}</span>
+                        </button>
+                        <button
+                          onClick={() => {
+                            setIsMobileMenuOpen(false);
+                            handleSaveToCloud();
+                          }}
+                          className="flex items-center gap-3 w-full p-3 text-sm text-foreground hover:bg-muted/50 rounded-lg transition-colors border border-transparent hover:border-border/50 text-left"
+                        >
+                          <Cloud className="w-4 h-4 text-purple-400" />
+                          <span className="flex-1">{t('snippets.saveToCloud')}</span>
+                        </button>
+                        <button
+                          onClick={() => {
+                            setIsMobileMenuOpen(false);
+                            downloadScript();
+                          }}
+                          className="flex items-center gap-3 w-full p-3 text-sm text-foreground hover:bg-muted/50 rounded-lg transition-colors border border-transparent hover:border-border/50 text-left"
+                        >
+                          <Download className="w-4 h-4 text-green-400" />
+                          <span className="flex-1">{t('app.download')}</span>
+                        </button>
+                        <button
+                          onClick={() => {
+                            setIsMobileMenuOpen(false);
+                            logout();
+                          }}
+                          className="flex items-center gap-3 w-full p-3 text-sm text-red-500 hover:bg-red-500/10 rounded-lg transition-colors border border-transparent hover:border-red-500/20 text-left mt-2"
+                        >
+                          <LogOut className="w-4 h-4" />
+                          <span className="flex-1">{t('auth.logout')}</span>
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => {
+                            setIsMobileMenuOpen(false);
+                            setAuthMode(AuthMode.LOGIN);
+                            setIsAuthModalOpen(true);
+                          }}
+                          className="flex items-center gap-3 w-full p-3 text-sm text-foreground hover:bg-muted/50 rounded-lg transition-colors border border-transparent hover:border-border/50 text-left"
+                        >
+                          <LogOut className="w-4 h-4 text-blue-400 rotate-180" />
+                          <span className="flex-1">{t('auth.signIn')}</span>
+                        </button>
+                        <button
+                          onClick={() => {
+                            setIsMobileMenuOpen(false);
+                            setAuthMode(AuthMode.REGISTER);
+                            setIsAuthModalOpen(true);
+                          }}
+                          className="flex items-center gap-3 w-full p-3 text-sm text-foreground hover:bg-muted/50 rounded-lg transition-colors border border-transparent hover:border-border/50 text-left"
+                        >
+                          <Plus className="w-4 h-4 text-purple-400" />
+                          <span className="flex-1">{t('auth.createAccount')}</span>
+                        </button>
+                        <button
+                          onClick={() => {
+                            setIsMobileMenuOpen(false);
+                            downloadScript();
+                          }}
+                          className="flex items-center gap-3 w-full p-3 text-sm text-foreground hover:bg-muted/50 rounded-lg transition-colors border border-transparent hover:border-border/50 text-left"
+                        >
+                          <Download className="w-4 h-4 text-green-400" />
+                          <span className="flex-1">{t('app.download')}</span>
+                        </button>
+                      </>
+                    )}
+                  </div>
+
+                  {/* Samples Accordion */}
+                  <div className="flex flex-col gap-2">
+                    <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+                      Resources
+                    </span>
+                    <div className="flex flex-col rounded-lg bg-muted/10 border border-border overflow-hidden">
+                      <button
+                        onClick={() => setIsSamplesAccordionOpen(!isSamplesAccordionOpen)}
+                        className="flex items-center justify-between p-3 text-sm font-medium hover:bg-muted/30 transition-colors w-full text-left"
+                      >
+                        <div className="flex items-center gap-3">
+                          <BookOpen className="w-4 h-4 text-yellow-500" />
+                          {t('app.samples')}
+                        </div>
+                        <Plus
+                          className={`w-4 h-4 transition-transform duration-300 ${isSamplesAccordionOpen ? 'rotate-45' : ''}`}
+                        />
+                      </button>
+                      <AnimatePresence>
+                        {isSamplesAccordionOpen && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            className="overflow-hidden"
+                          >
+                            <div className="flex flex-col gap-1 p-2 bg-black/10">
+                              {samples.map((s, idx) => (
+                                <button
+                                  key={idx}
+                                  onClick={() => {
+                                    loadSample(s);
+                                    setIsMobileMenuOpen(false);
+                                  }}
+                                  className="w-full text-left px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-background rounded-md transition-colors"
+                                >
+                                  {s.replace('.mpl', '')}
+                                </button>
+                              ))}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </>
           )}
         </AnimatePresence>
       </header>

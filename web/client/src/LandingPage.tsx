@@ -31,14 +31,6 @@ export const LandingPage: React.FC = () => {
     }
   }, [theme]);
 
-  // Ensure language matches localStorage
-  React.useEffect(() => {
-    const savedLang = localStorage.getItem(LocalStorageKey.LANGUAGE);
-    if (savedLang && i18n.language !== savedLang) {
-      i18n.changeLanguage(savedLang);
-    }
-  }, [i18n]);
-
   const toggleTheme = () =>
     setTheme((prev) => (prev === AppTheme.DARK ? AppTheme.LIGHT : AppTheme.DARK));
 
