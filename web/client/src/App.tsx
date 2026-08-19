@@ -21,6 +21,8 @@ import {
   Moon,
   X,
   Menu,
+  LogOut,
+  Save
 } from 'lucide-react';
 
 import { PaneType, AppLanguage } from '@/constants/enums';
@@ -28,6 +30,10 @@ import { useCodeExecution } from '@/hooks/useCodeExecution';
 import { ApiService } from '@/services/api';
 import Terminal from '@/components/Terminal';
 import Documentation from '@/components/Documentation';
+import { useAuth } from '@/contexts/AuthContext';
+import { AuthModal } from '@/components/auth/AuthModal';
+import { SaveSnippetModal } from '@/components/auth/SaveSnippetModal';
+import { MySnippetsModal } from '@/components/auth/MySnippetsModal';
 
 /**
  * Main App Component
@@ -53,6 +59,13 @@ const App: React.FC = () => {
   const [isSamplesOpen, setIsSamplesOpen] = useState(false);
   const [mobileView, setMobileView] = useState<'editor' | 'tools'>('editor');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState<'login' | 'register'>('login');
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
+  const [isMySnippetsOpen, setIsMySnippetsOpen] = useState(false);
+  
+  const { user, logout } = useAuth();
 
   // Fetch samples on mount
   useEffect(() => {
@@ -161,6 +174,21 @@ const App: React.FC = () => {
     URL.revokeObjectURL(url);
   };
 
+  const handleSaveToCloud = () => {
+    if (!user) {
+      setAuthModalMode('login');
+      setIsAuthModalOpen(true);
+      return;
+    }
+    setIsSaveModalOpen(true);
+  };
+
+  const handleLoadCloudSnippet = (title: string, content: string) => {
+    const newFile = { id: Date.now().toString(), name: `${title}.mpl`, content };
+    setFiles((prev) => [...prev, newFile]);
+    setActiveFileId(newFile.id);
+  };
+
   const closeTab = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
     if (files.length === 1) return; // Prevent closing last tab
@@ -250,6 +278,77 @@ const App: React.FC = () => {
             </AnimatePresence>
           </div>
 
+          {/* User Auth Section */}
+          <div className="hidden md:flex items-center gap-2 border-l border-border pl-4 ml-2">
+            {!user ? (
+              <>
+                <button
+                  onClick={() => { setAuthModalMode('login'); setIsAuthModalOpen(true); }}
+                  className="px-3 py-1.5 text-sm font-medium hover:bg-muted/50 rounded-md transition-colors"
+                >
+                  Log In
+                </button>
+                <button
+                  onClick={() => { setAuthModalMode('register'); setIsAuthModalOpen(true); }}
+                  className="px-3 py-1.5 text-sm font-medium bg-secondary hover:bg-secondary/80 text-secondary-foreground rounded-md transition-colors"
+                >
+                  Sign Up
+                </button>
+              </>
+            ) : (
+              <div className="relative">
+                <button
+                  onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                  className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-medium hover:ring-2 hover:ring-blue-400 transition-all"
+                >
+                  {user.name ? user.name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
+                </button>
+                
+                <AnimatePresence>
+                  {isUserMenuOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      className="absolute right-0 mt-2 w-48 bg-card border border-border rounded-lg shadow-xl overflow-hidden z-50"
+                    >
+                      <div className="px-4 py-3 border-b border-border/50 bg-muted/20">
+                        <p className="text-sm font-medium truncate">{user.name || 'User'}</p>
+                        <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                      </div>
+                      <div className="py-1">
+                        <button 
+                          onClick={() => { setIsMySnippetsOpen(true); setIsUserMenuOpen(false); }}
+                          className="w-full text-left px-4 py-2 text-sm hover:bg-muted transition-colors flex items-center gap-2"
+                        >
+                          <FileCode2 className="w-4 h-4" />
+                          My Snippets
+                        </button>
+                        <button 
+                          onClick={() => { logout(); setIsUserMenuOpen(false); }}
+                          className="w-full text-left px-4 py-2 text-sm hover:bg-red-500/10 text-red-500 transition-colors flex items-center gap-2"
+                        >
+                          <LogOut className="w-4 h-4" />
+                          Sign Out
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            )}
+          </div>
+
+          <div className="h-6 w-px bg-border mx-2 hidden md:block"></div>
+
+          <button
+            onClick={handleSaveToCloud}
+            className="hidden md:flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-secondary hover:bg-secondary/80 text-secondary-foreground rounded-md text-sm font-medium transition-all shadow-sm"
+          >
+            <Save className="w-4 h-4" />
+            <span className="hidden lg:inline">Save</span>
+          </button>
+
           <button
             onClick={() => {
               runCode();
@@ -320,6 +419,24 @@ const App: React.FC = () => {
           )}
         </AnimatePresence>
       </header>
+
+      <AuthModal 
+        isOpen={isAuthModalOpen} 
+        onClose={() => setIsAuthModalOpen(false)} 
+        defaultMode={authModalMode} 
+      />
+
+      <SaveSnippetModal
+        isOpen={isSaveModalOpen}
+        onClose={() => setIsSaveModalOpen(false)}
+        currentContent={activeFile.content}
+      />
+
+      <MySnippetsModal
+        isOpen={isMySnippetsOpen}
+        onClose={() => setIsMySnippetsOpen(false)}
+        onLoadSnippet={handleLoadCloudSnippet}
+      />
 
       {/* MAIN CONTENT - Responsive Layout */}
       <main className="flex-1 flex overflow-hidden relative">

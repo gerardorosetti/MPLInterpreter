@@ -4,6 +4,7 @@ import http from 'http';
 import { Server as SocketServer } from 'socket.io';
 import apiRoutes from '@/routes/api';
 import authRoutes from '@/routes/auth';
+import snippetsRoutes from '@/routes/snippets';
 import { setupSockets } from '@/sockets';
 
 const app = express();
@@ -14,6 +15,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/snippets', snippetsRoutes);
 app.use('/api', apiRoutes);
 
 // Server Setup
