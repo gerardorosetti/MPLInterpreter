@@ -1,3 +1,7 @@
+/**
+ * @file AuthModal.tsx
+ * @description Module handling AuthModal.tsx functionality for the MPL Interactive IDE.
+ */
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AuthMode } from '@/constants/enums';

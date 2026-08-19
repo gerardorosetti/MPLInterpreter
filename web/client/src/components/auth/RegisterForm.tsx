@@ -1,3 +1,7 @@
+/**
+ * @file RegisterForm.tsx
+ * @description Module handling RegisterForm.tsx functionality for the MPL Interactive IDE.
+ */
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';

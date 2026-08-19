@@ -1,3 +1,7 @@
+/**
+ * @file main.tsx
+ * @description Module handling main.tsx functionality for the MPL Interactive IDE.
+ */
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from '@/App.tsx';

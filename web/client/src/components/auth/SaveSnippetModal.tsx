@@ -1,3 +1,7 @@
+/**
+ * @file SaveSnippetModal.tsx
+ * @description Module handling SaveSnippetModal.tsx functionality for the MPL Interactive IDE.
+ */
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';

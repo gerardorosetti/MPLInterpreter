@@ -1,3 +1,7 @@
+/**
+ * @file AuthContext.tsx
+ * @description Module handling AuthContext.tsx functionality for the MPL Interactive IDE.
+ */
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 interface User {

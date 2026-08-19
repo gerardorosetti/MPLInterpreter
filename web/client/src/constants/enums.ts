@@ -42,3 +42,11 @@ export enum AppTheme {
   LIGHT = 'light',
   DARK = 'dark',
 }
+
+/**
+ * Defines keys used in localStorage to avoid magic strings.
+ */
+export enum LocalStorageKey {
+  LANGUAGE = 'mpl_language',
+  THEME = 'theme',
+}

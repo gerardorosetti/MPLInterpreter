@@ -1,12 +1,15 @@
+/**
+ * @file LandingPage.tsx
+ * @description Module handling LandingPage.tsx functionality for the MPL Interactive IDE.
+ */
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Terminal, Cloud, Zap, ArrowRight, Code2, Globe, Sun, Moon } from 'lucide-react';
+import { Terminal, Cloud, Zap, ArrowRight, Code2, Globe, Sun, Moon, LogOut } from 'lucide-react';
 import { AuthModal } from '@/components/auth/AuthModal';
-import { AppLanguage, AuthMode, AppTheme } from '@/constants/enums';
+import { AppLanguage, AuthMode, AppTheme, LocalStorageKey } from '@/constants/enums';
 import { useAuth } from '@/contexts/AuthContext';
-import { LogOut } from 'lucide-react';
 
 export const LandingPage: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -21,10 +24,10 @@ export const LandingPage: React.FC = () => {
   React.useEffect(() => {
     if (theme === AppTheme.DARK) {
       document.documentElement.classList.add(AppTheme.DARK);
-      localStorage.theme = AppTheme.DARK;
+      localStorage.setItem(LocalStorageKey.THEME, AppTheme.DARK);
     } else {
       document.documentElement.classList.remove(AppTheme.DARK);
-      localStorage.theme = AppTheme.LIGHT;
+      localStorage.setItem(LocalStorageKey.THEME, AppTheme.LIGHT);
     }
   }, [theme]);
 
@@ -34,7 +37,7 @@ export const LandingPage: React.FC = () => {
   const toggleLanguage = () => {
     const newLang = i18n.language === AppLanguage.EN ? AppLanguage.ES : AppLanguage.EN;
     i18n.changeLanguage(newLang);
-    localStorage.setItem('language', newLang);
+    localStorage.setItem(LocalStorageKey.LANGUAGE, newLang);
   };
 
   const openAuth = (mode: AuthMode) => {
