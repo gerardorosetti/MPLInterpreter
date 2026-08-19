@@ -496,247 +496,247 @@ const IdeWorkspace: React.FC = () => {
             <Menu className="w-5 h-5" />
           </button>
         </div>
+      </header>
 
-        {/* Mobile Menu Slide-Over Drawer */}
-        <AnimatePresence>
-          {isMobileMenuOpen && (
-            <>
-              {/* Backdrop */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 md:hidden"
-              />
-              {/* Drawer */}
-              <motion.div
-                initial={{ x: '100%' }}
-                animate={{ x: 0 }}
-                exit={{ x: '100%' }}
-                transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
-                className="fixed top-0 right-0 bottom-0 w-[85%] max-w-sm bg-card border-l border-border shadow-2xl z-50 flex flex-col md:hidden overflow-y-auto"
-              >
-                {/* Header & Close */}
-                <div className="flex items-center justify-between p-4 border-b border-border bg-muted/10">
-                  <span className="font-bold tracking-tight text-lg">MPL Menu</span>
-                  <button
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="p-2 rounded-md bg-muted/50 text-foreground hover:bg-muted transition-colors"
-                  >
-                    <Plus className="w-5 h-5 rotate-45" />
-                  </button>
+      {/* Mobile Menu Slide-Over Drawer */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 md:hidden"
+            />
+            {/* Drawer */}
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
+              className="fixed top-0 right-0 bottom-0 w-[85%] max-w-sm bg-card border-l border-border shadow-2xl z-50 flex flex-col md:hidden overflow-y-auto"
+            >
+              {/* Header & Close */}
+              <div className="flex items-center justify-between p-4 border-b border-border bg-muted/10">
+                <span className="font-bold tracking-tight text-lg">{t('app.menu')}</span>
+                <button
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="p-2 rounded-md bg-muted/50 text-foreground hover:bg-muted transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* User Profile Area */}
+              <div className="p-4 border-b border-border bg-card">
+                {user ? (
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold text-lg shadow-inner">
+                      {user.name ? user.name[0].toUpperCase() : user.email[0].toUpperCase()}
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-semibold">{user.name || 'User'}</span>
+                      <span className="text-xs text-muted-foreground">{user.email}</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center">
+                      <TermIcon className="w-5 h-5 text-blue-400" />
+                    </div>
+                    <span className="text-sm font-medium text-muted-foreground">
+                      {t('auth.continueAsGuest', 'Guest Mode')}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              <div className="p-4 flex flex-col gap-6">
+                {/* General Settings */}
+                <div className="flex flex-col gap-2">
+                  <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+                    {t('app.general')}
+                  </span>
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-muted/20 border border-border/50">
+                    <div className="flex items-center gap-3">
+                      <Home className="w-4 h-4 text-muted-foreground" />
+                      <span className="text-sm font-medium">{t('app.home')}</span>
+                    </div>
+                    <button
+                      onClick={() => navigate('/')}
+                      className="px-3 py-1 text-xs font-medium bg-muted/50 rounded-md"
+                    >
+                      {t('app.go')}
+                    </button>
+                  </div>
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-muted/20 border border-border/50">
+                    <div className="flex items-center gap-3">
+                      {theme === 'dark' ? (
+                        <Moon className="w-4 h-4 text-muted-foreground" />
+                      ) : (
+                        <Sun className="w-4 h-4 text-muted-foreground" />
+                      )}
+                      <span className="text-sm font-medium">{t('app.theme')}</span>
+                    </div>
+                    <button
+                      onClick={toggleTheme}
+                      className="px-3 py-1 text-xs font-medium bg-muted/50 rounded-md"
+                    >
+                      {t('app.toggle')}
+                    </button>
+                  </div>
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-muted/20 border border-border/50">
+                    <div className="flex items-center gap-3">
+                      <Globe className="w-4 h-4 text-muted-foreground" />
+                      <span className="text-sm font-medium">{t('app.language')}</span>
+                    </div>
+                    <button
+                      onClick={toggleLanguage}
+                      className="px-3 py-1 text-xs font-medium bg-muted/50 rounded-md uppercase"
+                    >
+                      {i18n.language}
+                    </button>
+                  </div>
                 </div>
 
-                {/* User Profile Area */}
-                <div className="p-4 border-b border-border bg-card">
+                {/* User Actions */}
+                <div className="flex flex-col gap-2">
+                  <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+                    {t('app.actions')}
+                  </span>
                   {user ? (
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold text-lg shadow-inner">
-                        {user.name ? user.name[0].toUpperCase() : user.email[0].toUpperCase()}
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-sm font-semibold">{user.name || 'User'}</span>
-                        <span className="text-xs text-muted-foreground">{user.email}</span>
-                      </div>
-                    </div>
+                    <>
+                      <button
+                        onClick={() => {
+                          setIsMobileMenuOpen(false);
+                          setIsMySnippetsOpen(true);
+                        }}
+                        className="flex items-center gap-3 w-full p-3 text-sm text-foreground hover:bg-muted/50 rounded-lg transition-colors border border-transparent hover:border-border/50 text-left"
+                      >
+                        <FileCode2 className="w-4 h-4 text-blue-400" />
+                        <span className="flex-1">{t('snippets.mySnippets')}</span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          setIsMobileMenuOpen(false);
+                          handleSaveToCloud();
+                        }}
+                        className="flex items-center gap-3 w-full p-3 text-sm text-foreground hover:bg-muted/50 rounded-lg transition-colors border border-transparent hover:border-border/50 text-left"
+                      >
+                        <Cloud className="w-4 h-4 text-purple-400" />
+                        <span className="flex-1">{t('snippets.saveToCloud')}</span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          setIsMobileMenuOpen(false);
+                          downloadScript();
+                        }}
+                        className="flex items-center gap-3 w-full p-3 text-sm text-foreground hover:bg-muted/50 rounded-lg transition-colors border border-transparent hover:border-border/50 text-left"
+                      >
+                        <Download className="w-4 h-4 text-green-400" />
+                        <span className="flex-1">{t('app.download')}</span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          setIsMobileMenuOpen(false);
+                          logout();
+                        }}
+                        className="flex items-center gap-3 w-full p-3 text-sm text-red-500 hover:bg-red-500/10 rounded-lg transition-colors border border-transparent hover:border-red-500/20 text-left mt-2"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        <span className="flex-1">{t('auth.logout')}</span>
+                      </button>
+                    </>
                   ) : (
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center">
-                        <TermIcon className="w-5 h-5 text-blue-400" />
-                      </div>
-                      <span className="text-sm font-medium text-muted-foreground">
-                        {t('auth.continueAsGuest', 'Guest Mode')}
-                      </span>
-                    </div>
+                    <>
+                      <button
+                        onClick={() => {
+                          setIsMobileMenuOpen(false);
+                          setAuthMode(AuthMode.LOGIN);
+                          setIsAuthModalOpen(true);
+                        }}
+                        className="flex items-center gap-3 w-full p-3 text-sm text-foreground hover:bg-muted/50 rounded-lg transition-colors border border-transparent hover:border-border/50 text-left"
+                      >
+                        <LogOut className="w-4 h-4 text-blue-400 rotate-180" />
+                        <span className="flex-1">{t('auth.signIn')}</span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          setIsMobileMenuOpen(false);
+                          setAuthMode(AuthMode.REGISTER);
+                          setIsAuthModalOpen(true);
+                        }}
+                        className="flex items-center gap-3 w-full p-3 text-sm text-foreground hover:bg-muted/50 rounded-lg transition-colors border border-transparent hover:border-border/50 text-left"
+                      >
+                        <Plus className="w-4 h-4 text-purple-400" />
+                        <span className="flex-1">{t('auth.createAccount')}</span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          setIsMobileMenuOpen(false);
+                          downloadScript();
+                        }}
+                        className="flex items-center gap-3 w-full p-3 text-sm text-foreground hover:bg-muted/50 rounded-lg transition-colors border border-transparent hover:border-border/50 text-left"
+                      >
+                        <Download className="w-4 h-4 text-green-400" />
+                        <span className="flex-1">{t('app.download')}</span>
+                      </button>
+                    </>
                   )}
                 </div>
 
-                <div className="p-4 flex flex-col gap-6">
-                  {/* General Settings */}
-                  <div className="flex flex-col gap-2">
-                    <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
-                      General
-                    </span>
-                    <div className="flex items-center justify-between p-3 rounded-lg bg-muted/20 border border-border/50">
+                {/* Samples Accordion */}
+                <div className="flex flex-col gap-2">
+                  <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+                    {t('app.resources')}
+                  </span>
+                  <div className="flex flex-col rounded-lg bg-muted/10 border border-border overflow-hidden">
+                    <button
+                      onClick={() => setIsSamplesAccordionOpen(!isSamplesAccordionOpen)}
+                      className="flex items-center justify-between p-3 text-sm font-medium hover:bg-muted/30 transition-colors w-full text-left"
+                    >
                       <div className="flex items-center gap-3">
-                        <Home className="w-4 h-4 text-muted-foreground" />
-                        <span className="text-sm font-medium">{t('app.home')}</span>
+                        <BookOpen className="w-4 h-4 text-yellow-500" />
+                        {t('app.samples')}
                       </div>
-                      <button
-                        onClick={() => navigate('/')}
-                        className="px-3 py-1 text-xs font-medium bg-muted/50 rounded-md"
-                      >
-                        Go
-                      </button>
-                    </div>
-                    <div className="flex items-center justify-between p-3 rounded-lg bg-muted/20 border border-border/50">
-                      <div className="flex items-center gap-3">
-                        {theme === 'dark' ? (
-                          <Moon className="w-4 h-4 text-muted-foreground" />
-                        ) : (
-                          <Sun className="w-4 h-4 text-muted-foreground" />
-                        )}
-                        <span className="text-sm font-medium">{t('app.theme')}</span>
-                      </div>
-                      <button
-                        onClick={toggleTheme}
-                        className="px-3 py-1 text-xs font-medium bg-muted/50 rounded-md"
-                      >
-                        Toggle
-                      </button>
-                    </div>
-                    <div className="flex items-center justify-between p-3 rounded-lg bg-muted/20 border border-border/50">
-                      <div className="flex items-center gap-3">
-                        <Globe className="w-4 h-4 text-muted-foreground" />
-                        <span className="text-sm font-medium">{t('app.language')}</span>
-                      </div>
-                      <button
-                        onClick={toggleLanguage}
-                        className="px-3 py-1 text-xs font-medium bg-muted/50 rounded-md uppercase"
-                      >
-                        {i18n.language}
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* User Actions */}
-                  <div className="flex flex-col gap-2">
-                    <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
-                      Actions
-                    </span>
-                    {user ? (
-                      <>
-                        <button
-                          onClick={() => {
-                            setIsMobileMenuOpen(false);
-                            setIsMySnippetsOpen(true);
-                          }}
-                          className="flex items-center gap-3 w-full p-3 text-sm text-foreground hover:bg-muted/50 rounded-lg transition-colors border border-transparent hover:border-border/50 text-left"
+                      <Plus
+                        className={`w-4 h-4 transition-transform duration-300 ${isSamplesAccordionOpen ? 'rotate-45' : ''}`}
+                      />
+                    </button>
+                    <AnimatePresence>
+                      {isSamplesAccordionOpen && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          className="overflow-hidden"
                         >
-                          <FileCode2 className="w-4 h-4 text-blue-400" />
-                          <span className="flex-1">{t('snippets.mySnippets')}</span>
-                        </button>
-                        <button
-                          onClick={() => {
-                            setIsMobileMenuOpen(false);
-                            handleSaveToCloud();
-                          }}
-                          className="flex items-center gap-3 w-full p-3 text-sm text-foreground hover:bg-muted/50 rounded-lg transition-colors border border-transparent hover:border-border/50 text-left"
-                        >
-                          <Cloud className="w-4 h-4 text-purple-400" />
-                          <span className="flex-1">{t('snippets.saveToCloud')}</span>
-                        </button>
-                        <button
-                          onClick={() => {
-                            setIsMobileMenuOpen(false);
-                            downloadScript();
-                          }}
-                          className="flex items-center gap-3 w-full p-3 text-sm text-foreground hover:bg-muted/50 rounded-lg transition-colors border border-transparent hover:border-border/50 text-left"
-                        >
-                          <Download className="w-4 h-4 text-green-400" />
-                          <span className="flex-1">{t('app.download')}</span>
-                        </button>
-                        <button
-                          onClick={() => {
-                            setIsMobileMenuOpen(false);
-                            logout();
-                          }}
-                          className="flex items-center gap-3 w-full p-3 text-sm text-red-500 hover:bg-red-500/10 rounded-lg transition-colors border border-transparent hover:border-red-500/20 text-left mt-2"
-                        >
-                          <LogOut className="w-4 h-4" />
-                          <span className="flex-1">{t('auth.logout')}</span>
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <button
-                          onClick={() => {
-                            setIsMobileMenuOpen(false);
-                            setAuthMode(AuthMode.LOGIN);
-                            setIsAuthModalOpen(true);
-                          }}
-                          className="flex items-center gap-3 w-full p-3 text-sm text-foreground hover:bg-muted/50 rounded-lg transition-colors border border-transparent hover:border-border/50 text-left"
-                        >
-                          <LogOut className="w-4 h-4 text-blue-400 rotate-180" />
-                          <span className="flex-1">{t('auth.signIn')}</span>
-                        </button>
-                        <button
-                          onClick={() => {
-                            setIsMobileMenuOpen(false);
-                            setAuthMode(AuthMode.REGISTER);
-                            setIsAuthModalOpen(true);
-                          }}
-                          className="flex items-center gap-3 w-full p-3 text-sm text-foreground hover:bg-muted/50 rounded-lg transition-colors border border-transparent hover:border-border/50 text-left"
-                        >
-                          <Plus className="w-4 h-4 text-purple-400" />
-                          <span className="flex-1">{t('auth.createAccount')}</span>
-                        </button>
-                        <button
-                          onClick={() => {
-                            setIsMobileMenuOpen(false);
-                            downloadScript();
-                          }}
-                          className="flex items-center gap-3 w-full p-3 text-sm text-foreground hover:bg-muted/50 rounded-lg transition-colors border border-transparent hover:border-border/50 text-left"
-                        >
-                          <Download className="w-4 h-4 text-green-400" />
-                          <span className="flex-1">{t('app.download')}</span>
-                        </button>
-                      </>
-                    )}
-                  </div>
-
-                  {/* Samples Accordion */}
-                  <div className="flex flex-col gap-2">
-                    <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
-                      Resources
-                    </span>
-                    <div className="flex flex-col rounded-lg bg-muted/10 border border-border overflow-hidden">
-                      <button
-                        onClick={() => setIsSamplesAccordionOpen(!isSamplesAccordionOpen)}
-                        className="flex items-center justify-between p-3 text-sm font-medium hover:bg-muted/30 transition-colors w-full text-left"
-                      >
-                        <div className="flex items-center gap-3">
-                          <BookOpen className="w-4 h-4 text-yellow-500" />
-                          {t('app.samples')}
-                        </div>
-                        <Plus
-                          className={`w-4 h-4 transition-transform duration-300 ${isSamplesAccordionOpen ? 'rotate-45' : ''}`}
-                        />
-                      </button>
-                      <AnimatePresence>
-                        {isSamplesAccordionOpen && (
-                          <motion.div
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: 'auto', opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            className="overflow-hidden"
-                          >
-                            <div className="flex flex-col gap-1 p-2 bg-black/10">
-                              {samples.map((s, idx) => (
-                                <button
-                                  key={idx}
-                                  onClick={() => {
-                                    loadSample(s);
-                                    setIsMobileMenuOpen(false);
-                                  }}
-                                  className="w-full text-left px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-background rounded-md transition-colors"
-                                >
-                                  {s.replace('.mpl', '')}
-                                </button>
-                              ))}
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
+                          <div className="flex flex-col gap-1 p-2 bg-black/10">
+                            {samples.map((s, idx) => (
+                              <button
+                                key={idx}
+                                onClick={() => {
+                                  loadSample(s);
+                                  setIsMobileMenuOpen(false);
+                                }}
+                                className="w-full text-left px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-background rounded-md transition-colors"
+                              >
+                                {s.replace('.mpl', '')}
+                              </button>
+                            ))}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
                 </div>
-              </motion.div>
-            </>
-          )}
-        </AnimatePresence>
-      </header>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       <AuthModal
         isOpen={isAuthModalOpen}

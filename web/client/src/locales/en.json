@@ -16,7 +16,13 @@
         "home": "Home",
         "theme": "Theme",
         "language": "Language",
-        "samples": "Samples"
+        "samples": "Samples",
+        "menu": "MPL Menu",
+        "general": "General",
+        "go": "Go",
+        "toggle": "Toggle",
+        "actions": "Actions",
+        "resources": "Resources"
     },
     "docs": {
         "title": "📖 MPL ULA - Reference Guide",

@@ -16,7 +16,13 @@
         "home": "Inicio",
         "theme": "Tema",
         "language": "Idioma",
-        "samples": "Ejemplos"
+        "samples": "Ejemplos",
+        "menu": "Menú MPL",
+        "general": "General",
+        "go": "Ir",
+        "toggle": "Cambiar",
+        "actions": "Acciones",
+        "resources": "Recursos"
     },
     "docs": {
         "title": "📖 MPL ULA - Guía de Referencia",
