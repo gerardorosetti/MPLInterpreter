@@ -22,7 +22,8 @@
         "go": "Ir",
         "toggle": "Cambiar",
         "actions": "Acciones",
-        "resources": "Recursos"
+        "resources": "Recursos",
+        "tools": "Herramientas"
     },
     "docs": {
         "title": "📖 MPL ULA - Guía de Referencia",

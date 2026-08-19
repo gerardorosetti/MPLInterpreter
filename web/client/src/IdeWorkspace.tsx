@@ -40,6 +40,79 @@ import { AuthModal } from '@/components/auth/AuthModal';
 import { SaveSnippetModal } from '@/components/auth/SaveSnippetModal';
 import { MySnippetsModal } from '@/components/auth/MySnippetsModal';
 
+const handleEditorWillMount = (monaco: Monaco) => {
+  monaco.languages.register({ id: 'mpl' });
+  monaco.languages.setMonarchTokensProvider('mpl', {
+    tokenizer: {
+      root: [
+        [
+          /\b(print|tridiagonal|matrixLu|realEigenvalues|bisectionRoot|integral|number|vector|matrix)\b/,
+          'keyword',
+        ],
+        [/[a-zA-Z_]\w*/, 'identifier'],
+        [/[0-9]+(\.[0-9]+)?/, 'number'],
+        [/[\{\}\[\]\(\)]/, 'delimiter'],
+        [/[+\-*\/^=,]/, 'operator'],
+      ],
+    },
+  });
+  monaco.languages.registerCompletionItemProvider('mpl', {
+    provideCompletionItems: () => {
+      const suggestions = [
+        {
+          label: 'display',
+          kind: monaco.languages.CompletionItemKind.Function,
+          insertText: 'display(${1:value});',
+          insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+        },
+        {
+          label: 'number',
+          kind: monaco.languages.CompletionItemKind.Keyword,
+          insertText: 'number ',
+        },
+        {
+          label: 'vector',
+          kind: monaco.languages.CompletionItemKind.Keyword,
+          insertText: '${1:name} = [${2:1, 2, 3}];',
+        },
+        {
+          label: 'matrix',
+          kind: monaco.languages.CompletionItemKind.Keyword,
+          insertText: '${1:name} = { [${2:1, 0}], [${3:0, 1}] };',
+        },
+      ];
+      return { suggestions };
+    },
+  });
+  monaco.editor.defineTheme('mpl-dark', {
+    base: 'vs-dark',
+    inherit: true,
+    rules: [
+      { token: 'keyword', foreground: 'C678DD', fontStyle: 'bold' },
+      { token: 'identifier', foreground: 'E5C07B' },
+      { token: 'number', foreground: 'D19A66' },
+      { token: 'operator', foreground: '56B6C2' },
+      { token: 'delimiter', foreground: 'ABB2BF' },
+    ],
+    colors: {
+      'editor.background': '#1e1e1e',
+      'editor.lineHighlightBackground': '#2c313a',
+    },
+  });
+};
+
+const EDITOR_OPTIONS = {
+  minimap: { enabled: false },
+  fontSize: 15,
+  fontFamily: "'Fira Code', 'JetBrains Mono', monospace",
+  lineHeight: 24,
+  padding: { top: 16, bottom: 16 },
+  scrollBeyondLastLine: false,
+  smoothScrolling: true,
+  cursorBlinking: 'smooth' as const,
+  renderLineHighlight: 'all' as const,
+};
+
 /**
  * Main App Component
  */
@@ -110,67 +183,6 @@ const IdeWorkspace: React.FC = () => {
   useEffect(() => {
     ApiService.getSamples().then(setSamples);
   }, []);
-
-  const handleEditorWillMount = (monaco: Monaco) => {
-    monaco.languages.register({ id: 'mpl' });
-    monaco.languages.setMonarchTokensProvider('mpl', {
-      tokenizer: {
-        root: [
-          [
-            /\b(print|tridiagonal|matrixLu|realEigenvalues|bisectionRoot|integral|number|vector|matrix)\b/,
-            'keyword',
-          ],
-          [/[a-zA-Z_]\w*/, 'identifier'],
-          [/[0-9]+(\.[0-9]+)?/, 'number'],
-          [/[\{\}\[\]\(\)]/, 'delimiter'],
-          [/[+\-*\/^=,]/, 'operator'],
-        ],
-      },
-    });
-    monaco.languages.registerCompletionItemProvider('mpl', {
-      provideCompletionItems: () => {
-        const suggestions = [
-          {
-            label: 'display',
-            kind: monaco.languages.CompletionItemKind.Function,
-            insertText: 'display(${1:value});',
-            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-          },
-          {
-            label: 'number',
-            kind: monaco.languages.CompletionItemKind.Keyword,
-            insertText: 'number ',
-          },
-          {
-            label: 'vector',
-            kind: monaco.languages.CompletionItemKind.Keyword,
-            insertText: '${1:name} = [${2:1, 2, 3}];',
-          },
-          {
-            label: 'matrix',
-            kind: monaco.languages.CompletionItemKind.Keyword,
-            insertText: '${1:name} = { [${2:1, 0}], [${3:0, 1}] };',
-          },
-        ];
-        return { suggestions };
-      },
-    });
-    monaco.editor.defineTheme('mpl-dark', {
-      base: 'vs-dark',
-      inherit: true,
-      rules: [
-        { token: 'keyword', foreground: 'C678DD', fontStyle: 'bold' },
-        { token: 'identifier', foreground: 'E5C07B' },
-        { token: 'number', foreground: 'D19A66' },
-        { token: 'operator', foreground: '56B6C2' },
-        { token: 'delimiter', foreground: 'ABB2BF' },
-      ],
-      colors: {
-        'editor.background': '#1e1e1e',
-        'editor.lineHighlightBackground': '#2c313a',
-      },
-    });
-  };
 
   // Sync theme
   useEffect(() => {
@@ -833,17 +845,7 @@ const IdeWorkspace: React.FC = () => {
               value={activeFile.content}
               onChange={(value) => updateCode(value || '')}
               beforeMount={handleEditorWillMount}
-              options={{
-                minimap: { enabled: false },
-                fontSize: 15,
-                fontFamily: "'Fira Code', 'JetBrains Mono', monospace",
-                lineHeight: 24,
-                padding: { top: 16, bottom: 16 },
-                scrollBeyondLastLine: false,
-                smoothScrolling: true,
-                cursorBlinking: 'smooth',
-                renderLineHighlight: 'all',
-              }}
+              options={EDITOR_OPTIONS}
             />
           </div>
         </div>
