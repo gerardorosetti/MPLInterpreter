@@ -9,7 +9,7 @@ i18n.use(initReactI18next).init({
     en: { translation: enTranslation },
     es: { translation: esTranslation },
   },
-  lng: 'en', // Default language
+  lng: localStorage.getItem('language') || 'en', // Default language
   fallbackLng: 'en',
   interpolation: {
     escapeValue: false, // React already safeguards from XSS

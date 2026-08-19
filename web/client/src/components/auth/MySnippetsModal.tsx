@@ -75,8 +75,7 @@ export const MySnippetsModal: React.FC<MySnippetsModalProps> = ({
 
   const deleteSnippet = async (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
-    if (!confirm(t('snippets.confirmDelete', 'Are you sure you want to delete this snippet?')))
-      return;
+    if (!confirm(t('snippets.confirmDelete'))) return;
 
     try {
       const res = await fetch(`${API_ENDPOINTS.SNIPPETS}/${id}`, {
@@ -120,7 +119,7 @@ export const MySnippetsModal: React.FC<MySnippetsModalProps> = ({
 
             <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-2 shrink-0">
               <FolderOpen className="w-5 h-5 text-blue-400" />
-              {t('snippets.mySnippets', 'My Cloud Snippets')}
+              {t('snippets.mySnippets')}
             </h2>
 
             {error && (
@@ -137,7 +136,7 @@ export const MySnippetsModal: React.FC<MySnippetsModalProps> = ({
               ) : snippets.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-48 text-gray-400">
                   <FileCode2 className="w-12 h-12 mb-3 opacity-50" />
-                  <p>{t('snippets.noSnippets', "You haven't saved any snippets yet.")}</p>
+                  <p>{t('snippets.noSnippets')}</p>
                 </div>
               ) : (
                 snippets.map((snippet) => (
@@ -161,7 +160,7 @@ export const MySnippetsModal: React.FC<MySnippetsModalProps> = ({
                     <button
                       onClick={(e) => deleteSnippet(e, snippet.id)}
                       className="opacity-0 group-hover:opacity-100 p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-all"
-                      title={t('snippets.deleteSnippet', 'Delete Snippet')}
+                      title={t('snippets.deleteSnippet')}
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>

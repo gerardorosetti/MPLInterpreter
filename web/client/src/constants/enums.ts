@@ -26,3 +26,19 @@ export enum AppLanguage {
   /** Spanish */
   ES = 'es',
 }
+
+/**
+ * Defines the authentication modes.
+ */
+export enum AuthMode {
+  LOGIN = 'login',
+  REGISTER = 'register',
+}
+
+/**
+ * Defines the application themes.
+ */
+export enum AppTheme {
+  LIGHT = 'light',
+  DARK = 'dark',
+}

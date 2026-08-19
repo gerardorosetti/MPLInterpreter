@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
-import { Mail, Lock, User, Loader2 } from 'lucide-react';
+import { Mail, Lock, User, Loader2, Eye, EyeOff } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { API_ENDPOINTS } from '@/services/api';
 import { handleApiError } from '@/utils/errorHelper';
@@ -17,6 +17,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onToggleM
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const { login } = useAuth();
   const { t } = useTranslation();
 
@@ -56,7 +57,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onToggleM
       className="w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-2xl"
     >
       <h2 className="text-2xl font-semibold text-white mb-6 text-center">
-        {t('auth.createAccount', 'Create an Account')}
+        {t('auth.createAccount')}
       </h2>
 
       {error && (
@@ -73,7 +74,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onToggleM
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder={t('auth.fullName', 'Full name (optional)')}
+              placeholder={t('auth.fullName')}
               className="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all duration-300"
             />
           </div>
@@ -86,7 +87,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onToggleM
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder={t('auth.email', 'Email address')}
+              placeholder={t('auth.email')}
               className="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all duration-300"
               required
             />
@@ -97,14 +98,21 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onToggleM
           <div className="relative">
             <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder={t('auth.password', 'Password')}
-              className="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all duration-300"
+              placeholder={t('auth.password')}
+              className="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-10 pr-12 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all duration-300"
               required
               minLength={6}
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-300 transition-colors"
+            >
+              {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+            </button>
           </div>
         </div>
 
@@ -113,22 +121,18 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onToggleM
           disabled={isSubmitting}
           className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-xl transition-all duration-300 flex items-center justify-center active:scale-[0.98]"
         >
-          {isSubmitting ? (
-            <Loader2 className="w-5 h-5 animate-spin" />
-          ) : (
-            t('auth.createAccount', 'Create Account')
-          )}
+          {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : t('auth.createAccount')}
         </button>
       </form>
 
       <div className="mt-6 text-center">
         <p className="text-gray-400 text-sm">
-          {t('auth.alreadyHaveAccount', 'Already have an account?')}{' '}
+          {t('auth.alreadyHaveAccount')}{' '}
           <button
             onClick={onToggleMode}
             className="text-blue-400 hover:text-blue-300 font-medium transition-colors"
           >
-            {t('auth.signIn', 'Sign in')}
+            {t('auth.signIn')}
           </button>
         </p>
       </div>

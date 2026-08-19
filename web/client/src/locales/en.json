@@ -11,7 +11,12 @@
         "outputPlaceholder": "Output will appear here...",
         "backendError": "Failed to connect to the MPL engine. Is the backend running?",
         "executing": "Executing...",
-        "noOutput": "No output."
+        "noOutput": "No output.",
+        "load": "Load",
+        "home": "Home",
+        "theme": "Theme",
+        "language": "Language",
+        "samples": "Samples"
     },
     "docs": {
         "title": "📖 MPL ULA - Reference Guide",
@@ -65,7 +70,9 @@
         "createOne": "Create one",
         "createAccount": "Create an Account",
         "fullName": "Full name (optional)",
-        "alreadyHaveAccount": "Already have an account?"
+        "alreadyHaveAccount": "Already have an account?",
+        "continueAsGuest": "Continue as Guest",
+        "logout": "Sign Out"
     },
     "snippets": {
         "saveToCloud": "Save to Cloud",
@@ -73,7 +80,27 @@
         "mySnippets": "My Cloud Snippets",
         "noSnippets": "You haven't saved any snippets yet.",
         "deleteSnippet": "Delete Snippet",
-        "confirmDelete": "Are you sure you want to delete this snippet?"
+        "confirmDelete": "Are you sure you want to delete this snippet?",
+        "saveOptions": "Save Options",
+        "guestSavePrompt": "You are currently working as a guest. How would you like to save your work?",
+        "downloadLocally": "Download Locally",
+        "downloadDesc": "Save as a .mpl file to your computer",
+        "loginToSave": "Log In to Save to Cloud",
+        "loginToSaveDesc": "Access your snippets anywhere"
+    },
+    "landing": {
+        "badge": "Interactive Math & Computing",
+        "title1": "Math logic,",
+        "title2": "executed in the cloud.",
+        "description": "A premium, lightning-fast interpreter for numerical methods and linear algebra. Save your snippets in the cloud, execute in real-time, and seamlessly learn through our interactive documentation.",
+        "startCoding": "Start Coding Now",
+        "goToWorkspace": "Go to Workspace",
+        "liveExecution": "Live Execution",
+        "liveExecutionDesc": "Experience instantaneous feedback with our WebSockets-powered REPL and highly optimized execution engine.",
+        "cloudSnippets": "Cloud Snippets",
+        "cloudSnippetsDesc": "Save your numerical methods algorithms securely in the cloud. Access them from anywhere, anytime.",
+        "interactiveDocs": "Interactive Docs",
+        "interactiveDocsDesc": "Learn as you code with our built-in interactive documentation covering all linear algebra methods."
     },
     "common": {
         "cancel": "Cancel",

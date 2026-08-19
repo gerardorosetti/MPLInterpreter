@@ -52,7 +52,7 @@ describe('useCodeExecution hook', () => {
 
     expect(mockExecute).toHaveBeenCalledWith('print(2);');
     expect(result.current.isLoading).toBe(false);
-    expect(result.current.output).toContain('Failed to execute code: Network Error');
+    expect(result.current.output).toContain('errors.unknownError');
   });
 
   it('should clear output when clearOutput is called', async () => {

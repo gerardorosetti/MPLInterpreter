@@ -22,14 +22,14 @@ export const useCodeExecution = () => {
    */
   const execute = async (code: string) => {
     setIsLoading(true);
-    setOutput(`${t('app.executing', 'Executing...')}\n`);
+    setOutput(`${t('app.executing')}\n`);
     try {
       const result = await ApiService.executeCode(code);
       let finalOutput = '';
       if (result.error) finalOutput += `Error: ${result.error}\n`;
       if (result.stderr) finalOutput += `Stderr: ${result.stderr}\n`;
       if (result.stdout) finalOutput += result.stdout;
-      setOutput(finalOutput || t('app.noOutput', 'No output.'));
+      setOutput(finalOutput || t('app.noOutput'));
     } catch (error: unknown) {
       setOutput(handleApiError(error, t));
     } finally {

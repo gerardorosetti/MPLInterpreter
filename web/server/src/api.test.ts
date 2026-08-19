@@ -42,7 +42,7 @@ describe('MPL Backend API', () => {
     const res = await request(app).post('/api/run').send({});
 
     expect(res.status).toBe(400);
-    expect(res.body.error).toBe('No code provided');
+    expect(res.body.error).toBe('errors.noCodeProvided');
   });
 
   it('POST /api/run should return error gracefully if execution fails', async () => {

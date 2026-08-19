@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
-import { Mail, Lock, Loader2 } from 'lucide-react';
+import { Mail, Lock, Loader2, Eye, EyeOff } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { API_ENDPOINTS } from '@/services/api';
 import { handleApiError } from '@/utils/errorHelper';
@@ -16,6 +16,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onToggleMode })
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const { login } = useAuth();
   const { t } = useTranslation();
 
@@ -55,7 +56,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onToggleMode })
       className="w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-2xl"
     >
       <h2 className="text-2xl font-semibold text-white mb-6 text-center">
-        {t('auth.welcomeBack', 'Welcome Back')}
+        {t('auth.welcomeBack')}
       </h2>
 
       {error && (
@@ -72,8 +73,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onToggleMode })
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder={t('auth.email', 'Email address')}
-              className="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all duration-300"
+              placeholder={t('auth.email')}
+              className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
               required
             />
           </div>
@@ -83,40 +84,41 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onToggleMode })
           <div className="relative">
             <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder={t('auth.password', 'Password')}
-              className="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all duration-300"
+              placeholder={t('auth.password')}
+              className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-10 pr-12 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
               required
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-300 transition-colors"
+            >
+              {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+            </button>
           </div>
         </div>
 
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-xl transition-all duration-300 flex items-center justify-center active:scale-[0.98]"
+          className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-colors flex items-center justify-center disabled:opacity-50"
         >
-          {isSubmitting ? (
-            <Loader2 className="w-5 h-5 animate-spin" />
-          ) : (
-            t('auth.signIn', 'Sign In')
-          )}
+          {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : t('auth.signIn')}
         </button>
       </form>
 
-      <div className="mt-6 text-center">
-        <p className="text-gray-400 text-sm">
-          {t('auth.noAccount', "Don't have an account?")}{' '}
-          <button
-            onClick={onToggleMode}
-            className="text-blue-400 hover:text-blue-300 font-medium transition-colors"
-          >
-            {t('auth.createOne', 'Create one')}
-          </button>
-        </p>
-      </div>
+      <p className="mt-6 text-center text-gray-400 text-sm">
+        {t('auth.noAccount')}{' '}
+        <button
+          onClick={onToggleMode}
+          className="text-blue-400 hover:text-blue-300 transition-colors"
+        >
+          {t('auth.createOne')}
+        </button>
+      </p>
     </motion.div>
   );
 };

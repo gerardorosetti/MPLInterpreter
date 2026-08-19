@@ -11,7 +11,12 @@
         "outputPlaceholder": "La salida aparecerá aquí...",
         "backendError": "Fallo al conectar con el motor MPL. ¿Está corriendo el backend?",
         "executing": "Ejecutando...",
-        "noOutput": "Sin salida."
+        "noOutput": "Sin salida.",
+        "load": "Cargar",
+        "home": "Inicio",
+        "theme": "Tema",
+        "language": "Idioma",
+        "samples": "Ejemplos"
     },
     "docs": {
         "title": "📖 MPL ULA - Guía de Referencia",
@@ -50,9 +55,9 @@
         "invalidCredentials": "Credenciales inválidas.",
         "invalidToken": "Token faltante o inválido.",
         "userNotFound": "Usuario no encontrado.",
-        "snippetNotFound": "Fragmento de código no encontrado.",
+        "snippetNotFound": "Fragmento no encontrado.",
         "forbidden": "Acceso denegado.",
-        "missingSnippetData": "El título y contenido son requeridos.",
+        "missingSnippetData": "Título y contenido son obligatorios.",
         "noCodeProvided": "No se ha proporcionado código.",
         "unknownError": "Ocurrió un error desconocido."
     },
@@ -65,15 +70,37 @@
         "createOne": "Crea una",
         "createAccount": "Crear una Cuenta",
         "fullName": "Nombre completo (opcional)",
-        "alreadyHaveAccount": "¿Ya tienes una cuenta?"
+        "alreadyHaveAccount": "¿Ya tienes una cuenta?",
+        "continueAsGuest": "Continuar como Invitado",
+        "logout": "Cerrar Sesión"
     },
     "snippets": {
         "saveToCloud": "Guardar en la Nube",
-        "snippetTitle": "Título del Snippet",
-        "mySnippets": "Mis Snippets en la Nube",
-        "noSnippets": "Aún no has guardado ningún snippet.",
-        "deleteSnippet": "Eliminar Snippet",
-        "confirmDelete": "¿Estás seguro de que quieres eliminar este snippet?"
+        "snippetTitle": "Título del Fragmento",
+        "mySnippets": "Mis Fragmentos",
+        "noSnippets": "Aún no has guardado ningún fragmento.",
+        "deleteSnippet": "Eliminar Fragmento",
+        "confirmDelete": "¿Estás seguro de que quieres eliminar este fragmento?",
+        "saveOptions": "Opciones de Guardado",
+        "guestSavePrompt": "Actualmente trabajas como invitado. ¿Cómo deseas guardar tu trabajo?",
+        "downloadLocally": "Descargar Localmente",
+        "downloadDesc": "Guardar como archivo .mpl en tu computadora",
+        "loginToSave": "Inicia Sesión para Guardar en la Nube",
+        "loginToSaveDesc": "Accede a tus fragmentos desde cualquier lugar"
+    },
+    "landing": {
+        "badge": "Matemáticas y Computación Interactiva",
+        "title1": "Lógica matemática,",
+        "title2": "ejecutada en la nube.",
+        "description": "Un intérprete premium y ultrarrápido para métodos numéricos y álgebra lineal. Guarda tus fragmentos en la nube, ejecuta en tiempo real y aprende fluidamente mediante nuestra documentación interactiva.",
+        "startCoding": "Empieza a Programar Ahora",
+        "goToWorkspace": "Ir al Workspace",
+        "liveExecution": "Ejecución en Vivo",
+        "liveExecutionDesc": "Experimenta respuestas instantáneas con nuestro REPL alimentado por WebSockets y nuestro motor de ejecución altamente optimizado.",
+        "cloudSnippets": "Fragmentos en la Nube",
+        "cloudSnippetsDesc": "Guarda tus algoritmos de métodos numéricos de forma segura en la nube. Accede a ellos desde cualquier lugar, en cualquier momento.",
+        "interactiveDocs": "Documentación Interactiva",
+        "interactiveDocsDesc": "Aprende mientras programas con nuestra documentación interactiva incorporada que cubre todos los métodos de álgebra lineal."
     },
     "common": {
         "cancel": "Cancelar",
